@@ -1,4 +1,4 @@
-package my.domain
+package myapp.domain
 
 data class Book(
         val bookId: Int,

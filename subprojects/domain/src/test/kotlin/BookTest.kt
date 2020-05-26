@@ -1,5 +1,6 @@
-package my.domain
+package myapp.test.domain
 
+import myapp.domain.Book
 import org.junit.jupiter.api.Test
 
 class BookTest {

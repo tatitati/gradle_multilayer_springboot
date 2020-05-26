@@ -1,7 +1,6 @@
-package my.infrastructure
+package myapp.infrastructure
 
-import my.domain.Book
-
+import myapp.domain.Book
 
 class RepositoryBook {
 

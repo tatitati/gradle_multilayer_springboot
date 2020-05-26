@@ -1,5 +1,6 @@
-package my.infrastructure
+package myapp.test.infrastructure
 
+import myapp.infrastructure.RepositoryBook
 import org.junit.jupiter.api.Test
 
 class RepositoryBookTest {
