@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 description = "clean-architecture-kotlin-template"
 
@@ -49,7 +50,7 @@ subprojects{
 	}
 
 	// for inter-dependencies between projects I need these two:
-	tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	tasks.withType<BootJar> {
 		enabled = false
 	}
 	tasks.withType<Jar> {
