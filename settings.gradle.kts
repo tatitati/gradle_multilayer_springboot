@@ -1,8 +1,8 @@
 rootProject.name = "myapp"
 
-include(
-        "subprojects:domain",
-        "subprojects:infrastructure"
-)
+include("domain", "infrastructure")
+
+project(":domain").projectDir = file("subprojects/domain")
+project(":infrastructure").projectDir = file("subprojects/infrastructure")
 
 

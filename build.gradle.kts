@@ -58,9 +58,9 @@ subprojects{
 }
 
 
-project(":subprojects:infrastructure"){
+project(":infrastructure"){
 	dependencies{
-		implementation(project(":subprojects:domain"))
+		implementation(project(":domain"))
 	}
 }
 
