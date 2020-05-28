@@ -92,6 +92,7 @@ project(":ui"){
 
 	dependencies{
 		implementation(project(":application"))
+		implementation(project(":domain"))
 	}
 }
 

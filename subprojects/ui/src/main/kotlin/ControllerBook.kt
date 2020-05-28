@@ -1,6 +1,7 @@
 package myapp.ui
 
 import myapp.applicatin.ServiceBook
+import myapp.domain.Book
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,8 +14,10 @@ import javax.annotation.PostConstruct
 class ControllerBook @Autowired constructor(
     val service: ServiceBook
 ){
+    // URL: localhost:8080/hello
     @GetMapping("/hello")
     fun helloKotlin(): String {
-        return service.findAllBooks().toString()
+        val books: List<Book> = service.findAllBooks()
+        return books.toString()
     }
 }
