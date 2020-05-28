@@ -68,11 +68,20 @@ project(":infrastructure"){
 	}
 }
 
+project(":application"){
+	description = "my APPLICATION layer description here"
+
+	dependencies{
+		implementation(project(":infrastructure"))
+		implementation(project(":domain"))
+	}
+}
+
 project(":ui"){
 	description = "my UI layer description here"
 
 	dependencies{
-		implementation(project(":infrastructure"))
+		implementation(project(":application"))
 	}
 }
 
