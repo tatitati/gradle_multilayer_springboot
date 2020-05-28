@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
-description = "clean-architecture-kotlin-template"
+description = "My project description here"
 
 plugins {
 	id("org.springframework.boot") version "2.3.0.RELEASE" apply false
@@ -51,18 +51,21 @@ subprojects{
 	}
 
 	// for inter-dependencies between projects I need these two:
+	// this avoid the error of not having a main class in one of the subprojects
 	tasks.withType<BootJar> {
 		enabled = false
-	}
-	tasks.withType<Jar> {
-		enabled = true
 	}
 }
 
 
 project(":infrastructure"){
+	description = "my infrastructure layer description here"
 	dependencies{
 		implementation(project(":domain"))
 	}
+}
+
+project(":domain"){
+	description = "my domain layer description here"
 }
 
