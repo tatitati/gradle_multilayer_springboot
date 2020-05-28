@@ -10,7 +10,7 @@ plugins {
 	id("org.jetbrains.kotlin.plugin.spring") version "1.3.72" apply false
 }
 
-subprojects{
+allprojects {
 	apply(plugin = "org.springframework.boot")
 	apply(plugin = "io.spring.dependency-management")
 	apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -49,23 +49,43 @@ subprojects{
 			jvmTarget = "1.8"
 		}
 	}
+}
 
+
+subprojects {
 	// for inter-dependencies between projects I need these two:
 	// this avoid the error of not having a main class in one of the subprojects
 	tasks.withType<BootJar> {
 		enabled = false
 	}
+
+	tasks.withType<Jar> {
+		enabled = false
+	}
 }
 
 
+project(":domain"){
+	description = "my domain layer description here"
+}
+
 project(":infrastructure"){
 	description = "my infrastructure layer description here"
+
 	dependencies{
 		implementation(project(":domain"))
 	}
 }
 
-project(":domain"){
-	description = "my domain layer description here"
+project(":ui"){
+	description = "my UI layer description here"
+
+	dependencies{
+		implementation(project(":infrastructure"))
+	}
+}
+
+dependencies{
+	implementation(project(":ui"))
 }
 
