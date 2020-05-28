@@ -51,22 +51,11 @@ allprojects {
 	}
 }
 
-
-subprojects {
-	// for inter-dependencies between projects I need these two:
-	// this avoid the error of not having a main class in one of the subprojects
+project(":domain"){
+	description = "my domain layer description here"
 	tasks.withType<BootJar> {
 		enabled = false
 	}
-
-	tasks.withType<Jar> {
-		enabled = false
-	}
-}
-
-
-project(":domain"){
-	description = "my domain layer description here"
 }
 
 project(":infrastructure"){
@@ -75,6 +64,9 @@ project(":infrastructure"){
 	dependencies{
 		implementation(project(":domain"))
 	}
+	tasks.withType<BootJar> {
+		enabled = false
+	}
 }
 
 project(":ui"){
@@ -82,6 +74,10 @@ project(":ui"){
 
 	dependencies{
 		implementation(project(":infrastructure"))
+	}
+
+	tasks.withType<BootJar> {
+		enabled = false
 	}
 }
 
