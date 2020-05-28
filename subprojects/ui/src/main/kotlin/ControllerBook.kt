@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.annotation.PostConstruct
 
 @RestController
-class ControllerBook {
+class ControllerBook{
 
     @PostConstruct
     fun whatever(){
@@ -17,7 +17,7 @@ class ControllerBook {
 
     @GetMapping("/hello")
     fun helloKotlin(): String {
-        println("asdfasdf")
+
         return "hello world"
     }
 }

@@ -43,19 +43,21 @@ allprojects {
 		useJUnitPlatform()
 	}
 
-	tasks.withType<KotlinCompile> {
+	tasks.withType<KotlinCompile>().configureEach {
 		kotlinOptions {
 			freeCompilerArgs = listOf("-Xjsr305=strict")
 			jvmTarget = "1.8"
+			suppressWarnings = true
 		}
+	}
+
+	tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+			enabled = false
 	}
 }
 
 project(":domain"){
 	description = "my domain layer description here"
-	tasks.withType<BootJar> {
-		enabled = false
-	}
 }
 
 project(":infrastructure"){
@@ -64,9 +66,6 @@ project(":infrastructure"){
 	dependencies{
 		implementation(project(":domain"))
 	}
-	tasks.withType<BootJar> {
-		enabled = false
-	}
 }
 
 project(":ui"){
@@ -74,10 +73,6 @@ project(":ui"){
 
 	dependencies{
 		implementation(project(":infrastructure"))
-	}
-
-	tasks.withType<BootJar> {
-		enabled = false
 	}
 }
 
