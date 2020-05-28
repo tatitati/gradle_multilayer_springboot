@@ -50,9 +50,11 @@ allprojects {
 			suppressWarnings = true
 		}
 	}
+}
 
-	tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-			enabled = false
+subprojects {
+	tasks.withType<BootJar>() {
+		enabled = false
 	}
 }
 
