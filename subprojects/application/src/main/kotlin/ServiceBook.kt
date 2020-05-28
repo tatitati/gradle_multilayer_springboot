@@ -1,8 +1,7 @@
 package myapp.applicatin
 
-import myapp.infrastructure.RepositoryBook
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
+import myapp.infrastructure.RepositoryBook
 import myapp.domain.Book
 
 @Service

@@ -1,7 +1,7 @@
 package myapp.infrastructure
 
-import myapp.domain.Book
 import org.springframework.stereotype.Repository
+import myapp.domain.Book
 
 @Repository
 class RepositoryBook {
