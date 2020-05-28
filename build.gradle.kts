@@ -39,22 +39,30 @@ allprojects {
 		}
 	}
 
-	tasks.withType<Test> {
-		useJUnitPlatform()
-	}
+	tasks {
+		withType<Test>() {
+			useJUnitPlatform()
+		}
 
-	tasks.withType<KotlinCompile>().configureEach {
-		kotlinOptions {
-			freeCompilerArgs = listOf("-Xjsr305=strict")
-			jvmTarget = "1.8"
-			suppressWarnings = true
+		withType<KotlinCompile> {
+			kotlinOptions {
+				freeCompilerArgs = listOf("-Xjsr305=strict")
+				jvmTarget = "1.8"
+				suppressWarnings = true
+			}
 		}
 	}
 }
 
 subprojects {
-	tasks.withType<BootJar>() {
-		enabled = false
+	tasks {
+		withType<Jar>() {
+			enabled = true
+		}
+
+		withType<BootJar>() {
+			enabled = false
+		}
 	}
 }
 

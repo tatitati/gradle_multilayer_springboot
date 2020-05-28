@@ -1,7 +1,9 @@
 package myapp.infrastructure
 
 import myapp.domain.Book
+import org.springframework.stereotype.Repository
 
+@Repository
 class RepositoryBook {
 
     fun findAll(): List<Book>{
