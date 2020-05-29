@@ -27,3 +27,31 @@ or everything in once command:
 ```
 ./gradlew test
 ```
+
+## About packages:
+You can find the nexts packagees for each layer:
+
+domain layer:
+```
+package myapp.domain
+package myapp.test.domain
+```
+
+infrastructure layer: You can find in here classes with @Repository tags
+```
+package myapp.infrastructure
+package myapp.test.infrastructure
+```
+
+ui layer: You will find in here classes with @ResController tags
+```
+package myapp.ui
+package myapp.test.ui
+```
+
+application layer: You will find in here classes with @Services tags
+```
+package myapp.application
+package myapp.test.application
+```
+ 
