@@ -63,5 +63,5 @@ at the root of the project, in /src
 This folder just contains a Main.kt, to decouple a bit the framework bootstrap from the rest of the application
  
 ## TODO:
-- introduce kafka producer and consumer in infrastructure layer, this will make me to think about how
-to work with autoconfiguration in a project with multiple layers. And keep adding tests
+- introduce kafka producer and consumer in infrastructure layer, using spring-kafka, this will make me to think about how
+to work with autoconfiguration in a project with multiple layers, using TDD
