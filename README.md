@@ -57,6 +57,10 @@ You will find in here classes with **@Services** tags
 package myapp.application
 package myapp.test.application
 ```
+
+## Where is the main (myapp)?
+at the root of the project, in /src
+This folder just contains a Main.kt, to decouple a bit the framework bootstrap from the rest of the application
  
 ## TODO:
 - introduce kafka producer and consumer in infrastructure layer, this will make me to think about how
