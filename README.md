@@ -58,3 +58,6 @@ package myapp.application
 package myapp.test.application
 ```
  
+## TODO:
+- introduce kafka producer and consumer in infrastructure layer, this will make me to think about how
+to work with autoconfiguration in a project with multiple layers. And keep adding tests
