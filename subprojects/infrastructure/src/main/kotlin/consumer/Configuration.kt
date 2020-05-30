@@ -26,9 +26,7 @@ class Configuration(
                 properties
         )
 
-        val repoC = Repository(consumer)
-        return repoC
-
+        return Repository(consumer)
     }
 }
 
