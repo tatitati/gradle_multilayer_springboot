@@ -1,4 +1,4 @@
-package myapp.infrastructure
+package myapp.infrastructure.consumer
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -15,7 +15,7 @@ class Repo(
         @Value ("\${spring.kafka.consumer.group-id}") private val groupId: String
 ) {
     @Bean
-    fun repository(): RepositoryConsumer {
+    fun repository(): Repository {
         val prop = Properties()
         prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer)
@@ -26,7 +26,7 @@ class Repo(
                 prop
         )
 
-        val repoC = RepositoryConsumer(consumer)
+        val repoC = Repository(consumer)
         return repoC
 
     }
