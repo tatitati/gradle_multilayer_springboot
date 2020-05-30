@@ -8,13 +8,18 @@ import myapp.domain.Book
 import myapp.infrastructure.consumer.RepositoryConsumer
 import myapp.infrastructure.producer.RepositoryProducer
 
+// Examples:
+// localhost:8081/hello
+// localhost:8081/consume
+// localhost:8081/produce
+
+
 @RestController
 class ControllerBook @Autowired constructor(
         val service: ServiceBook,
         val consumer: RepositoryConsumer,
         val producer: RepositoryProducer
 ){
-    // URL: localhost:8080/hello
     @GetMapping("/hello")
     fun helloKotlin(): String {
         val books: List<Book> = service.findAllBooks()
