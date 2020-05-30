@@ -5,10 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import myapp.applicatin.ServiceBook
 import myapp.domain.Book
+import myapp.infrastructure.ConfigConsumer
+import myapp.infrastructure.Repo
+import myapp.infrastructure.RepositoryConsumer
 
 @RestController
 class ControllerBook @Autowired constructor(
-    val service: ServiceBook
+    val service: ServiceBook,
+    val consumer: RepositoryConsumer
 ){
     // URL: localhost:8080/hello
     @GetMapping("/hello")
