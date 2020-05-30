@@ -1,38 +1,29 @@
 package myapp.infrastructure
 
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.stereotype.Component
 import java.util.*
 
-class ConfigConsumer(
-        private val bootstrapServers: String,
-        private val keyDeserializer: String,
-        private val valueDeserializer: String,
-        private val groupId: String
-): Properties()
-
 @Configuration
-@ConfigurationProperties(prefix = "spring.kafka.consumer")
-class Repo() {
-    lateinit var bootstrapServers: String
-    lateinit var keyDeserializer: String
-    lateinit var valueDeserializer: String
-    lateinit  var groupId: String
-
+class Repo(
+        @Value ("\${spring.kafka.consumer.bootstrap-servers}") private val bootstrapServers: String,
+        @Value ("\${spring.kafka.consumer.key-deserializer}") private val keyDeserializer: String,
+        @Value ("\${spring.kafka.consumer.value-deserializer}") private val valueDeserializer: String,
+        @Value ("\${spring.kafka.consumer.group-id}") private val groupId: String
+) {
     @Bean
     fun repository(): RepositoryConsumer {
-        val myconfig = ConfigConsumer(
-                this.bootstrapServers,
-                this.keyDeserializer,
-                this.valueDeserializer,
-                this.groupId
-        )
+        val prop = Properties()
+        prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer)
+        prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer)
+        prop.put(ConsumerConfig.GROUP_ID_CONFIG, groupId)
 
         val consumer = KafkaConsumer<String, String>(
-                myconfig
+                prop
         )
 
         val repoC = RepositoryConsumer(consumer)

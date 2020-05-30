@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import myapp.applicatin.ServiceBook
 import myapp.domain.Book
-import myapp.infrastructure.ConfigConsumer
-import myapp.infrastructure.Repo
 import myapp.infrastructure.RepositoryConsumer
 
 @RestController
