@@ -25,7 +25,7 @@ class ControllerBook @Autowired constructor(
     }
 
     @GetMapping("/produce")
-    fun consume(): Unit {
+    fun produce(): Unit {
         consumer.produceToTopic("mytopic")
     }
 }
