@@ -16,14 +16,14 @@ class Configuration(
 ) {
     @Bean
     fun repository(): Repository {
-        val prop = Properties()
-        prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-        prop.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer)
-        prop.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer)
-        prop.put(ConsumerConfig.GROUP_ID_CONFIG, groupId)
+        val properties = Properties()
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer)
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer)
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId)
 
         val consumer = KafkaConsumer<String, String>(
-                prop
+                properties
         )
 
         val repoC = Repository(consumer)
