@@ -22,11 +22,11 @@ class Configuration(
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer)
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId)
 
-        val consumer = KafkaConsumer<String, String>(
+        val kConsumer = KafkaConsumer<String, String>(
                 properties
         )
 
-        return Repository(consumer)
+        return Repository(kConsumer)
     }
 }
 
