@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import myapp.applicatin.ServiceBook
 import myapp.domain.Book
-import myapp.infrastructure.consumer.Repository
+import myapp.infrastructure.consumer.RepositoryConsumer
+import myapp.infrastructure.producer.RepositoryProducer
 
 @RestController
 class ControllerBook @Autowired constructor(
-    val service: ServiceBook,
-    val consumer: Repository
+        val service: ServiceBook,
+        val consumer: RepositoryConsumer,
+        val producer: RepositoryProducer
 ){
     // URL: localhost:8080/hello
     @GetMapping("/hello")
@@ -26,6 +28,7 @@ class ControllerBook @Autowired constructor(
 
     @GetMapping("/produce")
     fun produce(): Unit {
-        consumer.produceToTopic("mytopic")
+        val book = Book(23, "aaaa", "bbbbb")
+        producer.sendToTopic(book, "mytopic")
     }
 }
