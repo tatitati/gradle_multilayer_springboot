@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 import java.util.*
 
 @Configuration
-class Repo(
+class Configuration(
         @Value ("\${spring.kafka.consumer.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.consumer.key-deserializer}") private val keyDeserializer: String,
         @Value ("\${spring.kafka.consumer.value-deserializer}") private val valueDeserializer: String,
