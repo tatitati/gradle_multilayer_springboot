@@ -13,7 +13,6 @@ import myapp.infrastructure.producer.RepositoryProducer
 // localhost:8081/consume
 // localhost:8081/produce
 
-
 @RestController
 class ControllerBook @Autowired constructor(
         val service: ServiceBook,
