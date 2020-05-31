@@ -10,7 +10,7 @@ import java.util.*
 
 @Configuration
 class ConfigurationConsumer(
-        @Value ("\${spring.kafka.consumer.bootstrap-servers}") private val bootstrapServers: String,
+        @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.consumer.key-deserializer}") private val keyDeserializer: String,
         @Value ("\${spring.kafka.consumer.value-deserializer}") private val valueDeserializer: String,
         @Value ("\${spring.kafka.consumer.group-id}") private val groupId: String

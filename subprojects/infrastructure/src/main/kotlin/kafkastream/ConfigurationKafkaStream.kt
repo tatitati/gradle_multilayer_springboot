@@ -16,7 +16,7 @@ import java.util.*
 
 @Configuration
 class ConfigurationKafkaStream(
-        @Value ("\${spring.kafka.kstreams.bootstrap-servers}") private val bootstrapServers: String,
+        @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.kstreams.input-topic}") private val inputTopic: String,
         @Value ("\${spring.kafka.kstreams.output-topic}") private val outputTopic: String
 ) {

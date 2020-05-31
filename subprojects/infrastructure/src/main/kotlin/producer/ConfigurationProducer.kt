@@ -11,7 +11,7 @@ import java.util.*
 
 @Configuration
 class ConfigurationProducer(
-        @Value ("\${spring.kafka.producer.bootstrap-servers}") private val bootstrapServers: String,
+        @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.producer.key-serializer}") private val keySerializer: String,
         @Value ("\${spring.kafka.producer.value-serializer}") private val valueSerializer: String
 ) {
