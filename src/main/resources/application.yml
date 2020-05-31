@@ -20,6 +20,8 @@ spring:
     kstreams:
       input-topic: word-count-input
       output-topic: word-count-output
+      input-topic2: word-count-input2
+      output-topic2: word-count-output2
 
 ---
 
