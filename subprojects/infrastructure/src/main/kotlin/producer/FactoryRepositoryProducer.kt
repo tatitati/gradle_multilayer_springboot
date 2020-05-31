@@ -18,9 +18,11 @@ class FactoryRepositoryProducer(
     @Bean
     fun repositoryProducer(): RepositoryProducer {
         val properties = Properties()
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer)
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer)
+        properties.apply{
+            put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+            put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer)
+            put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer)
+        }
 
         val kProducer = KafkaProducer<String, String>(
                 properties

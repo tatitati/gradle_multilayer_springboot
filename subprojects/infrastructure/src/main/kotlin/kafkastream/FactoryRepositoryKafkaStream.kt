@@ -23,9 +23,11 @@ class FactoryRepositoryKafkaStream(
     @Bean
     fun repositoryKafkaStream(): RepositoryKStreams {
         val properties = Properties()
-        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
-        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        properties.apply{
+            put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
+            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        }
 
         val streamsBuilder = StreamsBuilder()
 
