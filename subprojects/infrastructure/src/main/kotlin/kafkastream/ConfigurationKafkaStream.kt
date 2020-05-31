@@ -30,6 +30,7 @@ class ConfigurationKafkaStream(
         val streamsBuilder = StreamsBuilder()
 
         val inputStream: KStream<String, String> = streamsBuilder.stream(inputTopic, Consumed.with(Serdes.String(), Serdes.String()))
+
         val processedStream: KStream<String, String> = inputStream
                 .mapValues { textLine ->
                     textLine.toLowerCase()
@@ -46,7 +47,6 @@ class ConfigurationKafkaStream(
         processedStream.to(outputTopic, Produced.with(Serdes.String(), Serdes.String()))
 
         val topology: Topology = streamsBuilder.build()
-
         val streams: KafkaStreams = KafkaStreams(topology, properties)
 
         return RepositoryKStreams(streams)
