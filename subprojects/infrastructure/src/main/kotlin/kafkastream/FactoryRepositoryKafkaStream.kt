@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration
 import java.util.*
 
 @Configuration
-class ConfigurationKafkaStream(
+class FactoryRepositoryKafkaStream(
         @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.kstreams.input-topic}") private val inputTopic: String,
         @Value ("\${spring.kafka.kstreams.output-topic}") private val outputTopic: String

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 import java.util.*
 
 @Configuration
-class ConfigurationProducer(
+class FactoryRepositoryProducer(
         @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
         @Value ("\${spring.kafka.producer.key-serializer}") private val keySerializer: String,
         @Value ("\${spring.kafka.producer.value-serializer}") private val valueSerializer: String
