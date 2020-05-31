@@ -38,9 +38,9 @@ class ConfigurationKafkaStream(
                 .flatMapValues { loweredCase ->
                     loweredCase.split(" ")
                 }
-                .mapValues { it ->
-                    println(it)
-                    it
+                .mapValues { splitText ->
+                    println(splitText)
+                    splitText
                 }
 
 
