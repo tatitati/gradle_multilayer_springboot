@@ -39,7 +39,6 @@ class KafkaStreamTests {
         ).buildTopology()
 
         val driver = TopologyTestDriver(topology, properties)
-
         inputTopic11 = driver.createInputTopic(inputTopic1, StringSerializer(), StringSerializer())
         outputTopic11 = driver.createOutputTopic(outputTopic1, StringDeserializer(), StringDeserializer())
 

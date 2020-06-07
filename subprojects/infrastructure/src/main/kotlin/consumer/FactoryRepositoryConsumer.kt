@@ -17,8 +17,7 @@ class FactoryRepositoryConsumer(
 ) {
     @Bean
     fun repositoryConsumer(): RepositoryConsumer {
-        val properties = Properties()
-        properties.apply{
+        val properties = Properties().apply{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer)
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer)

@@ -7,7 +7,6 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Produced
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -61,9 +60,8 @@ class FactoryRepositoryKafkaStream(
     }
 
     @Bean
-    fun multiKafkaStreams(): RepositoryKStreams {
-        val properties = Properties()
-        properties.apply{
+    fun buildRepository(): RepositoryKStreams {
+        val properties = Properties().apply{
             put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
             put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")

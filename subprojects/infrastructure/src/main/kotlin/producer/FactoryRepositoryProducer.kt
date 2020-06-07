@@ -17,8 +17,7 @@ class FactoryRepositoryProducer(
 ) {
     @Bean
     fun repositoryProducer(): RepositoryProducer {
-        val properties = Properties()
-        properties.apply{
+        val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer)
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer)
