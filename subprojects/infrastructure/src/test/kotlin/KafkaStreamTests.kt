@@ -1,21 +1,22 @@
 package myapp.test.infrastructure
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
-import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TestInputTopic
+import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
-import org.junit.jupiter.api.BeforeAll
+import org.apache.kafka.streams.test.ConsumerRecordFactory
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.record.RecordFactory
-import java.time.Duration
-import java.time.Instant
 import java.util.*
 
+
 class KafkaStreamTests {
+    var inputTopic11:TestInputTopic<String, String>? = null
+    var outputTopic11: TestOutputTopic<String, String>? = null
+
     @Test
     fun setupTopologyTestDriver(){
         val properties = Properties()
@@ -39,15 +40,15 @@ class KafkaStreamTests {
 
         val driver = TopologyTestDriver(topology, properties)
 
-        val inputTopic11: TestInputTopic<String, String> = driver.createInputTopic(
-                    inputTopic1,
-                    StringSerializer(),
-                    StringSerializer(),
-                    Instant.now(), Duration.ofSeconds(1)
-            )
+        inputTopic11 = driver.createInputTopic(inputTopic1, StringSerializer(), StringSerializer())
+        outputTopic11 = driver.createOutputTopic(outputTopic1, StringDeserializer(), StringDeserializer())
 
-        inputTopic11.pipeInput("this is my message")
+        inputTopic11!!.pipeInput("this is my message")
+
+        assertEquals(4L, outputTopic11!!.queueSize)
+        assertEquals("app1: this", outputTopic11!!.readValue())
+        assertEquals("app1: is", outputTopic11!!.readValue())
+        assertEquals("app1: my", outputTopic11!!.readValue())
+        assertEquals("app1: message", outputTopic11!!.readValue())
     }
-
-
 }
