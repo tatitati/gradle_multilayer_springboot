@@ -111,8 +111,8 @@ project(":application"){
 	}
 }
 
-project(":ui"){
-	description = "my UI layer description here"
+project(":presentation"){
+	description = "my CLI/WEB layer description here"
 
 	dependencies{
 		implementation(project(":application"))
@@ -122,6 +122,6 @@ project(":ui"){
 }
 
 dependencies{
-	implementation(project(":ui"))
+	implementation(project(":presentation"))
 }
 

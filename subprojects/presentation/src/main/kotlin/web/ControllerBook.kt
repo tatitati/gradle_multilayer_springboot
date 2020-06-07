@@ -1,4 +1,4 @@
-package myapp.ui
+package myapp.presentation.web
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping

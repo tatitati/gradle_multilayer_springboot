@@ -11,7 +11,7 @@ Root project 'myapp' - My project description here
 +--- Project ':application' - my APPLICATION layer description here
 +--- Project ':domain' - my domain layer description here
 +--- Project ':infrastructure' - my infrastructure layer description here
-\--- Project ':ui' - my UI layer description here
+\--- Project ':presentation' - my CLI/WEB layer description here
 ```
 
 ## How to run tests
@@ -20,7 +20,7 @@ Root project 'myapp' - My project description here
 ./gradlew domain:test
 ./gradlew infrastructure:test
 ./gradlew application:test
-./gradlew ui:test
+./gradlew presentation:test
 ```
 
 or everything in once command:
@@ -44,11 +44,11 @@ package myapp.infrastructure
 package myapp.test.infrastructure
 ```
 
-##### ui layer: 
+##### presentation layer: 
 You will find in here classes with **@ResController** tags
 ```
-package myapp.ui
-package myapp.test.ui
+package myapp.presentation
+package myapp.test.presentation
 ```
 
 ##### application layer: 

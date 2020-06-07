@@ -1,10 +1,10 @@
 rootProject.name = "myapp"
 
-include("domain", "infrastructure", "ui", "application")
+include("domain", "infrastructure", "presentation", "application")
 
 project(":domain").projectDir = file("subprojects/domain")
 project(":infrastructure").projectDir = file("subprojects/infrastructure")
-project(":ui").projectDir = file("subprojects/ui")
+project(":presentation").projectDir = file("subprojects/presentation")
 project(":application").projectDir = file("subprojects/application")
 
 
