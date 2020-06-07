@@ -15,11 +15,11 @@ import java.util.*
 
 @Configuration
 class FactoryRepositoryKafkaStream(
-        @Value ("\${spring.kafka.bootstrap-servers}") private val bootstrapServers: String,
-        @Value ("\${spring.kafka.kstreams.input-topic}") private val inputTopic: String,
-        @Value ("\${spring.kafka.kstreams.output-topic}") private val outputTopic: String,
-        @Value ("\${spring.kafka.kstreams.input-topic2}") private val inputTopic2: String,
-        @Value ("\${spring.kafka.kstreams.output-topic2}") private val outputTopic2: String
+        @Value ("\${spring.kafka.bootstrap-servers}") val bootstrapServers: String,
+        @Value ("\${spring.kafka.kstreams.input-topic}") val inputTopic: String,
+        @Value ("\${spring.kafka.kstreams.output-topic}") val outputTopic: String,
+        @Value ("\${spring.kafka.kstreams.input-topic2}") val inputTopic2: String,
+        @Value ("\${spring.kafka.kstreams.output-topic2}") val outputTopic2: String
 ) {
 
     fun buildTopology(): Topology{
