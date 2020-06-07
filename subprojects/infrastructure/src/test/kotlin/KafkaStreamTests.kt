@@ -19,8 +19,8 @@ class KafkaStreamTests {
     @Test
     fun setupTopologyTestDriver(){
         val properties = Properties().apply{
-            put(StreamsConfig.APPLICATION_ID_CONFIG, "testing-kafka-stream")
-            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "noneserver:0000")
+            put(StreamsConfig.APPLICATION_ID_CONFIG, "")
+            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "")
         }
 
         val repo = FactoryRepositoryKafkaStream(
