@@ -1,6 +1,7 @@
-package myapp.test.domain
+package myapp.test.domain.builders
 
 import myapp.domain.Book
+import myapp.test.domain.Faker
 
 class BuilderBook {
     var id: Int = Faker.anyInt()

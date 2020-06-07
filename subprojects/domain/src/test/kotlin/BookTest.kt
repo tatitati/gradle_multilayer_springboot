@@ -1,6 +1,7 @@
 package myapp.test.domain
 
 import myapp.domain.Book
+import myapp.test.domain.builders.BuilderBook
 import org.junit.jupiter.api.Test
 
 class BookTest {
