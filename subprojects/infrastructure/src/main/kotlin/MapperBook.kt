@@ -6,12 +6,10 @@ import myapp.domain.Book
 
 class MapperBook {
     fun toJson(book: Book): String {
-        val mapper = jacksonObjectMapper()
-        return mapper.writeValueAsString(book)
+        return jacksonObjectMapper().writeValueAsString(book)
     }
 
     fun toBook(json: String): Book {
-        val mapper = jacksonObjectMapper()
-        return mapper.readValue<Book>(json)
+        return jacksonObjectMapper().readValue<Book>(json)
     }
 }
