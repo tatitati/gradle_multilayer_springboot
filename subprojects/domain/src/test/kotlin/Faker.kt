@@ -21,7 +21,7 @@ class Faker {
         }
 
         fun anyString(maxLength: Int = 30): String {
-            val charactersPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + listOf('_', '-', ' ', '#', '!', '/', '\\')
+            val charactersPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + listOf('.', '_', '-', ' ', '#', '!', '/', '\\')
             val randomLength = anyInt(min = 2, max = maxLength)
 
             val randomTextAccumulator = ""
