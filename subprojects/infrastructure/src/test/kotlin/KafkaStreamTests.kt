@@ -1,7 +1,7 @@
 package myapp.test.infrastructure
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
-//import myapp.test.domain
+import myapp.test.domain.Faker
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.StreamsConfig
@@ -11,17 +11,17 @@ import org.apache.kafka.streams.TopologyTestDriver
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.util.*
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KafkaStreamTests {
     var inputTopic:TestInputTopic<String, String>? = null
     var outputTopic: TestOutputTopic<String, String>? = null
 
     @BeforeAll
-    fun setup(){
-        val properties = Properties().apply{
-//            put(StreamsConfig.APPLICATION_ID_CONFIG, Faker)
+    fun start() {
+        val properties = Properties().apply {
             put(StreamsConfig.APPLICATION_ID_CONFIG, "")
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "")
         }

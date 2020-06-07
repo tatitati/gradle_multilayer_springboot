@@ -8,6 +8,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.9.RELEASE" apply false
 	id("org.jetbrains.kotlin.jvm") version "1.3.72"
 	id("org.jetbrains.kotlin.plugin.spring") version "1.3.72" apply false
+	id("java-test-fixtures")
 }
 
 allprojects {
@@ -75,6 +76,21 @@ subprojects {
 
 project(":domain"){
 	description = "my domain layer description here"
+
+	// ALL THIS TO SHARE DOMAIN BUILDERS WITH THE REST OF PROJECTS (not too cool actually so much code for)
+	// https://stackoverflow.com/a/61682321/1447456
+	configurations {
+		create("test")
+	}
+
+	tasks.register<Jar>("testArchive") {
+		archiveBaseName.set("ProjectDomain-test")
+		from(project.the<SourceSetContainer>()["test"].output)
+	}
+
+	artifacts {
+		add("test", tasks["testArchive"])
+	}
 }
 
 project(":infrastructure"){
@@ -82,7 +98,7 @@ project(":infrastructure"){
 
 	dependencies{
 		implementation(project(":domain"))
-		testImplementation(project(":domain")) // Faker is in Domain, and used by infrastructure
+		testImplementation(project(":domain", "test"))
 	}
 }
 
