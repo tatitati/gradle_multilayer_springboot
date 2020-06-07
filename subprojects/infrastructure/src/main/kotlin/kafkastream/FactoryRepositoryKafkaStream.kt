@@ -22,39 +22,6 @@ class FactoryRepositoryKafkaStream(
         @Value ("\${spring.kafka.kstreams.input-topic2}") private val inputTopic2: String,
         @Value ("\${spring.kafka.kstreams.output-topic2}") private val outputTopic2: String
 ) {
-//    @Bean
-//    fun singleKafkaStream(): RepositoryKStreams {
-//        val properties = Properties()
-//        properties.apply{
-//            put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
-//            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-//            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-//        }
-//
-//        val streamsBuilder = StreamsBuilder()
-//
-//        val inputStream: KStream<String, String> = streamsBuilder.stream(inputTopic, Consumed.with(Serdes.String(), Serdes.String()))
-//
-//        val processedStream: KStream<String, String> = inputStream
-//                .mapValues { textLine ->
-//                    textLine.toLowerCase()
-//                }
-//                .flatMapValues { loweredCase ->
-//                    loweredCase.split(" ")
-//                }
-//                .mapValues { splitText ->
-//                    println(splitText)
-//                    splitText
-//                }
-//
-//        processedStream.to(outputTopic, Produced.with(Serdes.String(), Serdes.String()))
-//
-//        val topology: Topology = streamsBuilder.build()
-//        val streams: KafkaStreams = KafkaStreams(topology, properties)
-//
-//        return RepositoryKStreams(streams)
-//    }
-
     @Bean
     fun multiKafkaStreams(): RepositoryKStreams {
         val properties = Properties()
