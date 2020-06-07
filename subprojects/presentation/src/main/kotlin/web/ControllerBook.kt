@@ -35,6 +35,8 @@ class ControllerBook @Autowired constructor(
 
     @GetMapping("/produce")
     fun produce(): Unit {
+
+        // stub some data...
         (1..20).forEach{
             val book = Book(it, "aaaa_" + it, "bbbbb_" + it)
             repositoryProducer.sendToTopic(book, "mytopic")
@@ -46,6 +48,7 @@ class ControllerBook @Autowired constructor(
     fun kstream(): Unit {
         repositoryKStreams.start()
 
+        // stub some data....
         (1..20).forEach{
             val book = Book(it, "aaaa_" + it, "bbbbb_" + it)
             repositoryProducer.sendToTopic(book, "word-count-input")
