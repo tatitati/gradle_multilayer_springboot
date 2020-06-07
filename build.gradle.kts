@@ -82,6 +82,7 @@ project(":infrastructure"){
 
 	dependencies{
 		implementation(project(":domain"))
+		testImplementation(project(":domain")) // Faker is in Domain, and used by infrastructure
 	}
 }
 

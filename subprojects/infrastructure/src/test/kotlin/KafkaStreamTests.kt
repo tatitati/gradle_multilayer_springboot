@@ -1,6 +1,7 @@
 package myapp.test.infrastructure
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
+import myapp.test.domain
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.StreamsConfig
@@ -8,6 +9,7 @@ import org.apache.kafka.streams.TestInputTopic
 import org.apache.kafka.streams.TestOutputTopic
 import org.apache.kafka.streams.TopologyTestDriver
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -16,10 +18,10 @@ class KafkaStreamTests {
     var inputTopic11:TestInputTopic<String, String>? = null
     var outputTopic11: TestOutputTopic<String, String>? = null
 
-    @Test
-    fun setupTopologyTestDriver(){
+    @BeforeAll
+    fun setup(){
         val properties = Properties().apply{
-            put(StreamsConfig.APPLICATION_ID_CONFIG, "")
+            put(StreamsConfig.APPLICATION_ID_CONFIG, Faker)
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "")
         }
 
@@ -35,7 +37,10 @@ class KafkaStreamTests {
         val driver = TopologyTestDriver(topology, properties)
         inputTopic11 = driver.createInputTopic(repo.inputTopic, StringSerializer(), StringSerializer())
         outputTopic11 = driver.createOutputTopic(repo.outputTopic, StringDeserializer(), StringDeserializer())
+    }
 
+    @Test
+    fun setupTopologyTestDriver(){
         inputTopic11!!.pipeInput("this is my message")
 
         assertEquals(4L, outputTopic11!!.queueSize)
