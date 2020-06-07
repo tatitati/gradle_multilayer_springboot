@@ -15,8 +15,8 @@ import java.util.*
 
 
 class KafkaStreamTests {
-    var inputTopic11:TestInputTopic<String, String>? = null
-    var outputTopic11: TestOutputTopic<String, String>? = null
+    var inputTopic:TestInputTopic<String, String>? = null
+    var outputTopic: TestOutputTopic<String, String>? = null
 
     @BeforeAll
     fun setup(){
@@ -35,18 +35,18 @@ class KafkaStreamTests {
         val topology = repo.buildTopology()
 
         val driver = TopologyTestDriver(topology, properties)
-        inputTopic11 = driver.createInputTopic(repo.inputTopic, StringSerializer(), StringSerializer())
-        outputTopic11 = driver.createOutputTopic(repo.outputTopic, StringDeserializer(), StringDeserializer())
+        inputTopic = driver.createInputTopic(repo.inputTopic, StringSerializer(), StringSerializer())
+        outputTopic = driver.createOutputTopic(repo.outputTopic, StringDeserializer(), StringDeserializer())
     }
 
     @Test
     fun setupTopologyTestDriver(){
-        inputTopic11!!.pipeInput("this is my message")
+        inputTopic!!.pipeInput("this is my message")
 
-        assertEquals(4L, outputTopic11!!.queueSize)
-        assertEquals("app1: this", outputTopic11!!.readValue())
-        assertEquals("app1: is", outputTopic11!!.readValue())
-        assertEquals("app1: my", outputTopic11!!.readValue())
-        assertEquals("app1: message", outputTopic11!!.readValue())
+        assertEquals(4L, outputTopic!!.queueSize)
+        assertEquals("app1: this", outputTopic!!.readValue())
+        assertEquals("app1: is", outputTopic!!.readValue())
+        assertEquals("app1: my", outputTopic!!.readValue())
+        assertEquals("app1: message", outputTopic!!.readValue())
     }
 }
