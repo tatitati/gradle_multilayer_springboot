@@ -22,15 +22,8 @@ class FactoryRepositoryKafkaStream(
         @Value ("\${spring.kafka.kstreams.input-topic2}") private val inputTopic2: String,
         @Value ("\${spring.kafka.kstreams.output-topic2}") private val outputTopic2: String
 ) {
-    @Bean
-    fun multiKafkaStreams(): RepositoryKStreams {
-        val properties = Properties()
-        properties.apply{
-            put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
-            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
-            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-        }
 
+    fun buildTopology(): Topology{
         val streamsBuilder = StreamsBuilder()
 
         // kafkastream app 1:
@@ -64,6 +57,19 @@ class FactoryRepositoryKafkaStream(
                 .to(outputTopic2, Produced.with(Serdes.String(), Serdes.String()))
 
         val topology: Topology = streamsBuilder.build()
+        return topology
+    }
+
+    @Bean
+    fun multiKafkaStreams(): RepositoryKStreams {
+        val properties = Properties()
+        properties.apply{
+            put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
+            put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
+            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        }
+
+        val topology = this.buildTopology()
         val streams: KafkaStreams = KafkaStreams(topology, properties)
 
         return RepositoryKStreams(streams)

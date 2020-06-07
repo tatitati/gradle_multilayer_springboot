@@ -2,11 +2,9 @@ package myapp.infrastructure.producer
 
 import myapp.domain.Book
 import myapp.infrastructure.MapperBook
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
-import java.time.Duration
 import java.util.concurrent.Future
 
 class RepositoryProducer(
