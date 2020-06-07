@@ -1,7 +1,7 @@
 package myapp.test.infrastructure
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
-import myapp.test.domain
+//import myapp.test.domain
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.StreamsConfig
@@ -21,7 +21,8 @@ class KafkaStreamTests {
     @BeforeAll
     fun setup(){
         val properties = Properties().apply{
-            put(StreamsConfig.APPLICATION_ID_CONFIG, Faker)
+//            put(StreamsConfig.APPLICATION_ID_CONFIG, Faker)
+            put(StreamsConfig.APPLICATION_ID_CONFIG, "")
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "")
         }
 
