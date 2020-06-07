@@ -4,8 +4,8 @@ import myapp.domain.Book
 
 class BuilderBook {
     var id: Int = Faker.anyInt()
-    var name: String = Faker.anyWord()
-    var author: String = Faker.anyWord()
+    var name: String = Faker.anyString()
+    var author: String = Faker.anyString()
 
     fun anyWithName(name: String): BuilderBook {
         this.name = name
