@@ -18,8 +18,10 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     kstreams:
+      # stream 1
       input-topic: word-count-input
       output-topic: word-count-output
+      # stream 2
       input-topic2: word-count-input2
       output-topic2: word-count-output2
 
