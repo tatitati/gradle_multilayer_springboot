@@ -11,4 +11,10 @@ class BookTest {
         assert(2 == 2)
     }
 
+    @Test
+    fun `can create a book using builders`(){
+        val book = BuilderBook().anyWithName("myname").build()
+        assert("myname" == book.bookName)
+    }
+
 }

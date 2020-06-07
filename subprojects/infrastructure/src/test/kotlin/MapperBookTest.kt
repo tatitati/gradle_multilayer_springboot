@@ -23,4 +23,9 @@ class MapperBookTest {
 
         assert(book == Book(23, "asdf", "asdfasdf"))
     }
+
+    @Test
+    fun canUseBuildersInDomain(){
+
+    }
 }
