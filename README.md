@@ -1,3 +1,10 @@
+# TODO:
+- Add CLI endpoints at presentation level to have an example of a CLI
+- Create an example of Ktable and tesst it
+- Create an example to play with KSQL
+- Improve knowledge about the types we use for keys, values, serdes and se/de-serializers
+
+
 
 ## About the subprojects (layers) of this application
 ```
