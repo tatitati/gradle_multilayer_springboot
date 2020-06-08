@@ -3,6 +3,7 @@
 - Create an example of Ktable and tesst it
 - Create an example to play with KSQL
 - Improve knowledge about the types we use for keys, values, serdes and se/de-serializers
+- Investigate how JARs are created and packaged in a multiprojects with shared fixtures in tests. It will be interesting
 
 
 
