@@ -13,18 +13,21 @@ import java.util.*
 
 class ConsumerSeekAndAssignTest {
 
-    @Test
-    fun getConsumer(){
+    fun buildConsumer(): KafkaConsumer<String, String>{
         val properties = Properties().apply{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
         }
 
-        val kafkaConsumer = KafkaConsumer<String, String>(
+        return KafkaConsumer<String, String>(
                 properties
         )
+    }
 
+    @Test
+    fun experiment(){
+        val kafkaConsumer = buildConsumer()
         val topic = "my-seek-assign-topic"
         val partition = 0
         val offset = 15L
