@@ -29,6 +29,7 @@ class ConsumerSeekAndAssignTest {
     fun experiment(){
         val kafkaConsumer = buildConsumer()
         val topic = "my-seek-assign-topic"
+        // params for seek and assign
         val partition = 0
         val offset = 15L
         val partitionToReadFrom: TopicPartition = TopicPartition(topic, partition)

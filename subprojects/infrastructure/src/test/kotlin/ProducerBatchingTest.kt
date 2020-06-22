@@ -13,6 +13,7 @@ class ProducerBatchingTest {
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerSerializer")
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
+            // params for batching
             put(ProducerConfig.LINGER_MS_CONFIG, "2000")
             put(ProducerConfig.BATCH_SIZE_CONFIG, (32*1024).toString()) //32KB batch size
         }
