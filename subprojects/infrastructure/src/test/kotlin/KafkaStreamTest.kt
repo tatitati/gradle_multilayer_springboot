@@ -1,7 +1,6 @@
 package myapp.test.infrastructure
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
-import myapp.test.domain.Faker
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.StreamsConfig
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.TestInstance
 import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class KafkaStreamTests {
+class KafkaStreamTest {
     var inputTopic:TestInputTopic<String, String>? = null
     var outputTopic: TestOutputTopic<String, String>? = null
 
