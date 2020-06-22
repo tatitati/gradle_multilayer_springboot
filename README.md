@@ -1,3 +1,12 @@
+# TODO:
+- Add CLI endpoints at presentation level to have an example of a CLI
+- Get better with profiles. What happen if I add another application.yml into tests/resources?, it seems that override the one in /src?, but just the ones we specify?
+- Create an example of Ktable and tesst it
+- Create an example to play with KSQL
+- Improve knowledge about the types we use for keys, values, serdes and se/de-serializers
+- Investigate how JARs are created and packaged in a multiprojects with shared fixtures in tests. It will be interesting
+
+
 
 ## About the subprojects (layers) of this application
 ```
@@ -61,7 +70,3 @@ package myapp.test.application
 ## Where is the main (myapp)?
 at the root of the project, in /src
 This folder just contains a Main.kt, to decouple a bit the framework bootstrap from the rest of the application
- 
-## TODO:
-- introduce kafka producer and consumer in infrastructure layer, using spring-kafka, this will make me to think about how
-to work with autoconfiguration in a project with multiple layers, using TDD
