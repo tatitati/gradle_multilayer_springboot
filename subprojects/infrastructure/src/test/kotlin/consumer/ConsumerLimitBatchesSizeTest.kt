@@ -19,23 +19,23 @@ class ConsumerLimitBatchesSizeTest {
             put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "2")
         }
 
-        val kafkaConsumer = KafkaConsumer<String, String>(
+        val consumer = KafkaConsumer<String, String>(
                 properties
         )
 
         val topic = "consumer-batch-size-topic"
-        kafkaConsumer.subscribe(listOf(topic))
-        return kafkaConsumer
+        consumer.subscribe(listOf(topic))
+        return consumer
     }
 
     @Test
     fun experiment(){
-        val kafkaConsumer = buildConsumer()
+        val consumer = buildConsumer()
 
         var receivedMessages = 0
         var limitReceived = 10
         while (true) {
-            val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
+            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(2))
             println("\n\n==========> Received a batch with recods amount: " + batchOfRecords.count())
             Thread.sleep(1000)
             // process batch
