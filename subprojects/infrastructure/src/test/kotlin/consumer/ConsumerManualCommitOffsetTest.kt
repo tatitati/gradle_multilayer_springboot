@@ -37,37 +37,18 @@ class ConsumerManualCommitOffsetTest {
         var limitReceived = 10
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
-            println("Received a with recods amount: " + batchOfRecords.count())
+            println("Received a batch with recods amount: " + batchOfRecords.count())
 
             // process batch
             batchOfRecords.iterator().forEach {
                 receivedMessages++
                 limitReceived--
 
-                println("Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
+                println("=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
                 kafkaConsumer.commitSync()
 
                 if (limitReceived < 0) return
             }
         }
     }
-
-    //    Result description:
-    //    ===================
-    //    The consumer read an specific amount of msgs from a topic
-    //
-    //
-    //    Output:
-    //    =======
-    //    Partition: 0, Offset: 0, Key: null, Value: one
-    //    Partition: 0, Offset: 1, Key: null, Value: two
-    //    Partition: 0, Offset: 2, Key: null, Value: three
-    //    Partition: 0, Offset: 3, Key: null, Value: four
-    //    Partition: 0, Offset: 4, Key: null, Value: five
-    //    Partition: 0, Offset: 5, Key: null, Value: six
-    //    Partition: 0, Offset: 6, Key: null, Value: seven
-    //    Partition: 0, Offset: 7, Key: null, Value: eight
-    //    Partition: 0, Offset: 8, Key: null, Value: nine
-    //    Partition: 0, Offset: 9, Key: null, Value: ten
-    //    Partition: 0, Offset: 10, Key: null, Value: eleven
 }
