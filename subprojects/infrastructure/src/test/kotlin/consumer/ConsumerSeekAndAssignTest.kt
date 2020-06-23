@@ -38,6 +38,8 @@ class ConsumerSeekAndAssignTest {
         var limitReceived = 5
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
+            println("Received a with recods amount: " + batchOfRecords.count())
+
             // process batch
             batchOfRecords.iterator().forEach {
                 receivedMessages++

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-class ConsumerGroupTest {
+class ConsumerManualCommitOffsetTest {
 
     fun buildConsumer(): KafkaConsumer<String, String>{
         val properties = Properties().apply{
@@ -15,6 +15,9 @@ class ConsumerGroupTest {
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-test")
+            // manual commit of offsets
+            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+            put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
         }
 
         val kafkaConsumer = KafkaConsumer<String, String>(
@@ -34,12 +37,15 @@ class ConsumerGroupTest {
         var limitReceived = 10
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
+            println("Received a with recods amount: " + batchOfRecords.count())
+
             // process batch
             batchOfRecords.iterator().forEach {
                 receivedMessages++
                 limitReceived--
 
                 println("Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
+                kafkaConsumer.commitSync()
 
                 if (limitReceived < 0) return
             }
