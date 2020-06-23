@@ -35,12 +35,12 @@ class ConsumerLastXmessagesTest {
 
         consumer.assign(listOf(partitionToReadFrom))
         consumer.seekToEnd(listOf(partitionToReadFrom))
-        val currentPosition = consumer.position(partitionToReadFrom)
-        println("\n\n=========> current position: " + currentPosition)
-        if (currentPosition <= getLastX) {
-            consumer.seek(partitionToReadFrom, currentPosition)
+        val curentOffset = consumer.position(partitionToReadFrom)
+        println("\n\n=========> current position: " + curentOffset)
+        if (curentOffset <= getLastX) {
+            consumer.seek(partitionToReadFrom, curentOffset)
         } else {
-            consumer.seek(partitionToReadFrom, currentPosition - getLastX)
+            consumer.seek(partitionToReadFrom, curentOffset - getLastX)
         }
 
 
