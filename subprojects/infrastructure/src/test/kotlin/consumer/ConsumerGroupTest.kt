@@ -34,6 +34,7 @@ class ConsumerGroupTest {
         var limitReceived = 10
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
+            // process batch
             batchOfRecords.iterator().forEach {
                 receivedMessages++
                 limitReceived--

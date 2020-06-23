@@ -14,6 +14,7 @@ class RepositoryConsumer(
 
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = kconsumer.poll(Duration.ofSeconds(1))
+            // process batch
             batchOfRecords.iterator().forEach {
                 println(it)
             }
