@@ -1,4 +1,4 @@
-package myapp.test.infrastructure
+package myapp.test.infrastructure.producer
 
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig

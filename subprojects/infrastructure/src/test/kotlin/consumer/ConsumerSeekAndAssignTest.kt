@@ -1,8 +1,5 @@
-package myapp.test.infrastructure
+package myapp.test.infrastructure.consumer
 
-import myapp.infrastructure.MapperBook
-import myapp.infrastructure.consumer.FactoryRepositoryConsumer
-import myapp.infrastructure.consumer.RepositoryConsumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
