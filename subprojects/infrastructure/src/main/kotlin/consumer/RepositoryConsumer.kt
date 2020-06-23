@@ -13,8 +13,8 @@ class RepositoryConsumer(
         kconsumer.subscribe(listOf(topic))
 
         while (true) {
-            val records: ConsumerRecords<String, String> = kconsumer.poll(Duration.ofSeconds(1))
-            records.iterator().forEach {
+            val batchOfRecords: ConsumerRecords<String, String> = kconsumer.poll(Duration.ofSeconds(1))
+            batchOfRecords.iterator().forEach {
                 println(it)
             }
         }

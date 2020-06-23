@@ -3,7 +3,6 @@ package myapp.test.infrastructure.consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.TopicPartition
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
@@ -34,8 +33,8 @@ class ConsumerGroupTest {
         var receivedMessages = 0
         var limitReceived = 10
         while (true) {
-            val records: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
-            records.iterator().forEach {
+            val batchOfRecords: ConsumerRecords<String, String> = kafkaConsumer.poll(Duration.ofSeconds(2))
+            batchOfRecords.iterator().forEach {
                 receivedMessages++
                 limitReceived--
 
