@@ -3,6 +3,8 @@ package myapp.test.infrastructure.producer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.IntegerSerializer
+import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -11,8 +13,10 @@ class ProducerBatchingTest {
     fun buildProducer(): KafkaProducer<String, String>{
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
-            put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerSerializer")
-            put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
+            // put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerSerializer")
+            // put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
+            put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer::class.java)
+            put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
             // params for batching
             put(ProducerConfig.LINGER_MS_CONFIG, "2000")
             put(ProducerConfig.BATCH_SIZE_CONFIG, (32*1024).toString()) //32KB batch size

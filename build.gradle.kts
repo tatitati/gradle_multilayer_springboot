@@ -27,6 +27,9 @@ allprojects {
 
 	repositories {
 		mavenCentral()
+		maven {
+			url = uri("https://packages.confluent.io/maven")
+		}
 	}
 
 	dependencies {
@@ -39,6 +42,10 @@ allprojects {
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.apache.kafka:kafka-clients:2.4.0")
 		implementation("org.apache.kafka:kafka-streams:2.4.0")
+		// schema registry
+		implementation("org.apache.avro:avro:1.8.2")
+		implementation("io.confluent:kafka-avro-serializer:5.3.0")
+
 		testImplementation("org.apache.kafka:kafka-streams-test-utils:2.4.0")
 
 
