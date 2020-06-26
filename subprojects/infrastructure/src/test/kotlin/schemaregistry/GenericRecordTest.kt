@@ -2,11 +2,10 @@ package myapp.test.infrastructure.schemaregistry
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import org.apache.avro.Schema
+import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -26,6 +25,45 @@ class ProducerAvroTest {
 
     @Test
     fun testBatching(){
+        val jsonSchemaPerson = """
+            {
+              "type": "record",
+              "name": "Person",
+              "namespace": "com.ippontech.kafkatutorials",
+              "fields": [
+                {
+                  "name": "firstName",
+                  "type": "string"
+                },
+                {
+                  "name": "lastName",
+                  "type": "string"
+                },
+                {
+                  "name": "birthDate",
+                  "type": "long"
+                }
+              ]
+            }
+        """.trimIndent()
+
+//        val schema = Schema.Parser().parse(File("src/main/resources/person.avsc"))
+        val schemaPerson = Schema.Parser().parse(jsonSchemaPerson)
+
+
+        data class Person(
+                val firstName: String,
+                val lastName: String,
+                val age: Int
+        )
+
+        val avroPerson = GenericRecordBuilder(schemaPerson)
+        avroPerson.set("firstName", "samuel")
+        avroPerson.set("lastName", "ruiz")
+        avroPerson.set("age", 4)
+        val recordPerson = avroPerson.build()
+
+
         val producer: KafkaProducer<String, Costumer> = buildProducer()
 
         val topic = "customer-avro"

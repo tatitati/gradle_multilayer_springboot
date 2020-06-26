@@ -7,6 +7,24 @@
 - Investigate how JARs are created and packaged in a multiprojects with shared fixtures in tests. It will be interesting
 
 
+## Start zookeeper + kafka + schema registry + landoop
+
+```
+docker-compose up -d
+open http://127.0.0.1:3030
+```
+
+# Run confluent Avro tools:
+
+```
+docker run  -it --rm  --net=host  confluentinc/cp-schema-registry:3.1.1 bash <kafka-avro-console-consumer.....>
+```
+
+or you can:
+
+```
+hook_avro.sh  <avro command>
+```
 
 ## About the subprojects (layers) of this application
 ```
