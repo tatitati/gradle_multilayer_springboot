@@ -43,7 +43,7 @@ allprojects {
 		implementation("org.apache.kafka:kafka-clients:2.4.0")
 		implementation("org.apache.kafka:kafka-streams:2.4.0")
 		// schema registry
-		implementation("org.apache.avro:avro:1.8.2")
+		implementation("org.apache.avro:avro:1.9.2")
 		implementation("io.confluent:kafka-avro-serializer:5.3.0")
 
 		testImplementation("org.apache.kafka:kafka-streams-test-utils:2.4.0")
