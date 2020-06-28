@@ -37,5 +37,8 @@ class ProducerIdempotentTest {
             producer.send(
                     ProducerRecord(topic, it))
         }
+
+        producer.flush()
+        producer.close()
     }
 }

@@ -41,6 +41,9 @@ class ProducerBatchingTest {
                     ProducerRecord(topic, it)
             )
         }
+
+        producer.flush()
+        producer.close()
     }
 
     // Output description:

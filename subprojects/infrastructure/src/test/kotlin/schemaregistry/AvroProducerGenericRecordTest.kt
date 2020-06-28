@@ -51,17 +51,21 @@ class AvroProducerGenericRecordTest {
         val genericRecordPerson = GenericRecordBuilder(schemaPerson).apply{
             set("firstName", "sam")
             set("lastName", "dedios")
-            set("age", 5)
+            set("age", (0 until 10000).random())
         }.build()
 
-        val producer: KafkaProducer<String, GenericRecord> = buildProducer()
+        println("\n\n=======> Record: " + genericRecordPerson + "\n\n")
+        val avroProducer: KafkaProducer<String, GenericRecord> = buildProducer()
 
         // the topic is generated if doesnt exist
         // the schema is generated if doesnt exist, is named: my-generic-record-value-value
         // (it behaves in the same way that the CLI avro-producer
         val topic = "my-generic-record-value"
-        producer.send(
+        avroProducer.send(
                 ProducerRecord(topic, genericRecordPerson)
         )
+
+        avroProducer.flush()
+        avroProducer.close()
     }
 }
