@@ -89,7 +89,7 @@ package myapp.test.application
 at the root of the project, in /src
 This folder just contains a Main.kt, to decouple a bit the framework bootstrap from the rest of the application
 
-# AVRO
+# AVRO FILES
 Some useful commands to play with Avro files:
 
 #### Read avro file as json:
@@ -122,4 +122,23 @@ $ avro-tools tojson --pretty subprojects/infrastructure/person_generic_record.av
             } 
         ]
    }
+```
+# AVRO CONSUMER/PRODUCER
+
+### setup
+```
+docker-compose up -d
+```
+
+### produce some messages + create topic + create schema in schema registry + validate produced messages (all with an avro-producer)
+```
+kafka-avro-console-producer --broker-list $khost --topic test-avro --property schema.registry.url=http://127.0.0.1:8081 --property value.schema='{"type":"record", "name": "myrecord", "fields": [{"name": "f1", "type": "string"}, {"name": "f2", "type": "int", "default": 0}]}'
+
+
+{"f1":"evolution", "f2":2}
+```
+
+### Consume messages with an avro-consumer
+```
+kafka-avro-console-consumer --topic test-avro-from-local --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
 ```
