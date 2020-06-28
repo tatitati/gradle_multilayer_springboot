@@ -24,8 +24,10 @@ class AvroProducerGenericRecordTest {
         )
     }
 
+    // you can test the producer with the CLI:
+    // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
-    fun testBatching(){
+    fun avroProducer(){
         val schemaPerson = Schema.Parser().parse("""
             {
               "type": "record",
