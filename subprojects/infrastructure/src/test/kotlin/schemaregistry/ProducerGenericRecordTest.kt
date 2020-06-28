@@ -57,7 +57,7 @@ class ProducerGenericRecordTest {
 
         val producer: KafkaProducer<String, GenericRecord> = buildProducer()
 
-        val topic = "topic-generic-record-avro2"
+        val topic = "my-generic-record-value"
         producer.send(
                 ProducerRecord(topic, genericRecordPerson)
         )
