@@ -50,15 +50,14 @@ class GenericRecordTest {
         """.trimIndent())
 
         val genericRecordPerson = GenericRecordBuilder(schemaPerson).apply{
-            set("firstName", "samuel")
-            set("lastName", "ruiz")
-            set("age", 4)
+            set("firstName", "sam")
+            set("lastName", "dedios")
+            set("age", 5)
         }.build()
-
 
         val producer: KafkaProducer<String, GenericRecord> = buildProducer()
 
-        val topic = "topic-generic-record-avro"
+        val topic = "topic-generic-record-avro2"
         producer.send(
                 ProducerRecord(topic, genericRecordPerson)
         )
