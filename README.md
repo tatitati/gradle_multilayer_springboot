@@ -88,3 +88,38 @@ package myapp.test.application
 ## Where is the main (myapp)?
 at the root of the project, in /src
 This folder just contains a Main.kt, to decouple a bit the framework bootstrap from the rest of the application
+
+# AVRO
+Some useful commands to play with Avro files:
+
+#### Read avro file as json:
+```
+$ avro-tools tojson --pretty subprojects/infrastructure/person_generic_record.avro
+{
+    "firstName" : "sam",
+    "lastName" : "dedios",
+    "age" : 66
+}
+```
+
+#### Get schema from an avro file:
+```
+   $ avro-tools getschema subprojects/infrastructure/person_generic_record.avro
+   {
+       "type" : "record",
+       "name" : "Person",
+       "namespace" : "myapp.infrastructure",
+       "fields" : [ 
+            {
+               "name" : "firstName",
+               "type" : "string"
+            }, {
+               "name" : "lastName",
+               "type" : "string"
+            }, {
+               "name" : "age",
+               "type" : "int"
+            } 
+        ]
+   }
+```
