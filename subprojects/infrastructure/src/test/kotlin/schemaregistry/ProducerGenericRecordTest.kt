@@ -58,6 +58,7 @@ class ProducerGenericRecordTest {
 
         // the topic is generated if doesnt exist
         // the schema is generated if doesnt exist, is named: my-generic-record-value-value
+        // (it behaves in the same way that the CLI avro-producer
         val topic = "my-generic-record-value"
         producer.send(
                 ProducerRecord(topic, genericRecordPerson)
