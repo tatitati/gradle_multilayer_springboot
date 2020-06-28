@@ -1,7 +1,6 @@
 package myapp.test.infrastructure.schemaregistry
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import myapp.infrastructure.Person
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
@@ -57,10 +56,11 @@ class ProducerGenericRecordTest {
 
         val producer: KafkaProducer<String, GenericRecord> = buildProducer()
 
+        // the topic is generated if doesnt exist
+        // the schema is generated if doesnt exist, is named: my-generic-record-value-value
         val topic = "my-generic-record-value"
         producer.send(
                 ProducerRecord(topic, genericRecordPerson)
         )
-
     }
 }
