@@ -56,7 +56,6 @@ class AvroProducerGenericRecordTest {
             set("age", (0 until 10000).random())
         }.build()
 
-        println("\n\n=======> Record: " + genericRecordPerson + "\n\n")
         val avroProducer: KafkaProducer<String, GenericRecord> = buildProducer()
 
         // the topic is generated if doesnt exist
