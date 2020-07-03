@@ -9,8 +9,16 @@
 
 ## Start zookeeper + kafka + schema registry + landoop
 
+You can use landoop the oficial Landoop docker or use the oficial Confluent docker:
+### setup with Confluent
 ```
-docker-compose up -d
+docker-compose -f docker-compose-confluent.yml up
+open http://localhost:9021
+```
+
+### setup with Landoop
+```
+docker-compose -f docker-compose-landoop.yml up
 open http://127.0.0.1:3030
 ```
 
@@ -124,12 +132,6 @@ $ avro-tools tojson --pretty subprojects/infrastructure/person_generic_record.av
    }
 ```
 # AVRO CONSUMER/PRODUCER
-
-### setup
-```
-docker-compose up -d
-```
-
 ### produce some messages + create topic + create schema in schema registry + validate produced messages (all with an avro-producer)
 ```
 kafka-avro-console-producer --broker-list $khost --topic test-avro --property schema.registry.url=http://127.0.0.1:8081 --property value.schema='{"type":"record", "name": "myrecord", "fields": [{"name": "f1", "type": "string"}, {"name": "f2", "type": "int", "default": 0}]}'
