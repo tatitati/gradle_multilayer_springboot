@@ -1,8 +1,6 @@
-package myapp.test.infrastructure.schemaregistry
+package myapp.test.infrastructure.producer
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import org.apache.avro.Schema
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
@@ -50,9 +48,9 @@ class JsonProducerTest {
     @Test
     fun jsonProducer(){
         val record = User(
-            firstName = "namehere",
-            lastName = "lastname here",
-            age = (0 until 10000).random()
+                firstName = "namehere",
+                lastName = "lastname here",
+                age = (0 until 10000).random()
         )
 
         println("\n\n=======> Record: " + record.toString() + "\n\n")
