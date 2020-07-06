@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.producer
+package myapp.test.infrastructure.producer.serializers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.kafka.clients.producer.KafkaProducer
