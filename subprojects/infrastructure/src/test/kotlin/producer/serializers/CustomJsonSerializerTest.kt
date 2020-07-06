@@ -47,21 +47,17 @@ class JsonProducerTest {
     // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val record = User(
-                firstName = "namehere",
-                lastName = "lastname here",
-                age = (0 until 10000).random()
-        )
-
-        println("\n\n=======> Record: " + record.toString() + "\n\n")
-        val jsonProducer: KafkaProducer<String, User> = buildProducer()
-
         val topic = "my-json_serielizer-topic"
+        val user = User(firstName = "namehere", lastName = "lastname here", age = (0 until 10000).random())
+
+        val jsonProducer = buildProducer()
         jsonProducer.send(
-                ProducerRecord(topic, record)
+                ProducerRecord(topic, user)
         )
 
-        jsonProducer.flush()
-        jsonProducer.close()
+        jsonProducer.apply{
+            flush()
+            close()
+        }
     }
 }

@@ -33,20 +33,17 @@ class JsonPropertiesTest {
     // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val record = Book(
-                title = "jungle book",
-                authorName = "tupapa"
-        )
-
-        println("\n\n\n\n\n=======> Record: " + record.toString() + "\n\n\n\n\n")
-        val jsonProducer: KafkaProducer<String, Book> = buildProducer()
-
         val topic = "book-topic-value"
+        val record = Book(title = "jungle book", authorName = "tupapa")
+
+        val jsonProducer = buildProducer()
         jsonProducer.send(
                 ProducerRecord(topic, record)
         )
 
-        jsonProducer.flush()
-        jsonProducer.close()
+        jsonProducer.apply{
+            flush()
+            close()
+        }
     }
 }
