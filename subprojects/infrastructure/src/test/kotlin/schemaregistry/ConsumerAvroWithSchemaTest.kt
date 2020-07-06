@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-class AvroConsumerTest {
+class ConsumerAvroWithSchemaTest {
     fun buildConsumer(): KafkaConsumer<String, GenericRecord> {
         val properties = Properties().apply{
             put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:9094")
