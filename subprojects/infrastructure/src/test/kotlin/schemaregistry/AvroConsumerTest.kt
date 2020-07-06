@@ -20,9 +20,7 @@ class AvroConsumerTest {
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
-        val consumer = KafkaConsumer<String, GenericRecord>(
-                properties
-        )
+        val consumer = KafkaConsumer<String, GenericRecord>(properties)
 
         val topic = "my-generic-record-value"
         consumer.subscribe(listOf(topic))
