@@ -8,12 +8,7 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-
-class Book(
-        val title: String,
-        val authorName: String
-)
-
+class Book(val title: String, val authorName: String)
 
 class JsonPropertiesTest {
 
