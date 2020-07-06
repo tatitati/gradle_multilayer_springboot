@@ -32,18 +32,9 @@ class ProducerAvroWithSchemasTest {
               "name": "Person",
               "namespace": "myapp.infrastructure",
               "fields": [
-                {
-                  "name": "firstName",
-                  "type": "string"
-                },
-                {
-                  "name": "lastName",
-                  "type": "string"
-                },
-                {
-                  "name": "age",
-                  "type": "int"
-                }
+                {"name": "firstName","type": "string"},
+                {"name": "lastName","type": "string"},
+                {"name": "age","type": "int"}
               ]
             }
         """.trimIndent())
