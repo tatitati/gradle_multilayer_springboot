@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 
-data class Book(
-        @JsonProperty("title") var title: String,
-        @JsonProperty("author") var authorName: String)
+class Book(
+        val title: String,
+        val authorName: String
+)
 
 
 class JsonPropertiesTest {
@@ -31,8 +32,8 @@ class JsonPropertiesTest {
     // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val topic = "book-topic-value"
-        val record = Book(title = "jungle book", authorName = "tupapa")
+        val topic = "book-topic-value-6"
+        val record = Book(title = "jungle book2 ", authorName = "tupapa")
 
         buildProducer().apply{
             send(ProducerRecord(topic, record))
