@@ -13,6 +13,7 @@ data class User(val firstName: String, val lastName: String, val age: Int)
 
 class UserSerializer: Serializer<User> {
     override fun configure(map: Map<String?, *>?, b: Boolean) {}
+    override fun close() {}
     override fun serialize(arg0: String?, arg1: User?): ByteArray? {
         var retVal: ByteArray? = null
         val objectMapper = ObjectMapper()
@@ -24,7 +25,6 @@ class UserSerializer: Serializer<User> {
         return retVal
     }
 
-    override fun close() {}
 }
 
 
