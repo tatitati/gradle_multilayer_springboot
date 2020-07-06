@@ -24,9 +24,7 @@ class JsonPropertiesTest {
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
-        return KafkaProducer<String, Book>(
-                properties
-        )
+        return KafkaProducer<String, Book>(properties)
     }
 
     // you can test the producer with the CLI:
