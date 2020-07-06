@@ -64,46 +64,4 @@ class ProducerUsingJsonSchemaDraft7Test {
         producer.flush()
         producer.close()
     }
-
-    @Test
-    fun createSchemaObject(){
-        val schema = """"""" + "\$" + "schema" + """""""
-        val id = """"""" + "\$" + "id" + """""""
-
-        val schemaPersonUsingDraft7 = Schema.Parser().parse("""
-            {
-                $schema: "http://json-schema.org/draft-07/schema#",
-                $id: "anewid",
-                "title": "The Root Schema",
-                "name": "asdfasdf",
-                "subject": "newcategory",
-                "schemaType": "JSON",
-                "type": "object",
-                "properties": {
-                    "name":      { "type": "string" },
-                    "email":     { "type": "string" },
-                    "address":   { "type": "string" },
-                    "telephone": { "type": "string" }
-                },
-                "required": ["name", "email"]
-            }
-        """.trimIndent())
-
-        val genericRecordPerson = GenericRecordBuilder(schemaPersonUsingDraft7).apply{
-            set("aaa", "2018-11-13T20:20:39+00:00")
-        }.build()
-
-        val producer: KafkaProducer<String, GenericRecord> = buildProducer()
-
-        // the topic is generated if doesnt exist
-        // the schema is generated if doesnt exist, is named: my-generic-record-value-value
-        // (it behaves in the same way that the CLI avro-producer
-        val topic = "my-topic-with-schema-object"
-        producer.send(
-                ProducerRecord(topic, genericRecordPerson)
-        )
-
-        producer.flush()
-        producer.close()
-    }
 }
