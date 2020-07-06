@@ -50,9 +50,7 @@ class JsonProducerTest {
         val topic = "my-json_serielizer-topic"
         val user = User(firstName = "namehere", lastName = "lastname here", age = (0 until 10000).random())
 
-        val jsonProducer = buildProducer()
-
-        jsonProducer.apply{
+        buildProducer().apply{
             send(ProducerRecord(topic, user))
             flush()
             close()

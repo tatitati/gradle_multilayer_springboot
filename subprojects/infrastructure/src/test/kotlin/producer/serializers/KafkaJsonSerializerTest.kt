@@ -35,10 +35,8 @@ class JsonPropertiesTest {
     fun jsonProducer(){
         val topic = "book-topic-value"
         val record = Book(title = "jungle book", authorName = "tupapa")
- 
-        val jsonProducer = buildProducer()
 
-        jsonProducer.apply{
+        buildProducer().apply{
             send(ProducerRecord(topic, record))
             flush()
             close()
