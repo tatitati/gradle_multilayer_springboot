@@ -28,12 +28,12 @@ class ProducerUsingJsonSchemaDraft7Test {
     fun createSchemaRecord(){
         val topic = "my-topic-with-schema-record"
 
-        val schema = """"""" + "\$" + "schema" + """""""
-        val id = """"""" + "\$" + "id" + """""""
+        val schema = "\$schema"
+        val id = "\$id"
         val schemaPerson = Schema.Parser().parse("""
             {
-                $schema: "http://json-schema.org/draft-07/schema#",
-                $id: "anewid",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "$id": "anewid",
                 "title": "The Root Schema",
                 "name": "asdfasdf",
                 "subject": "newcategory",
