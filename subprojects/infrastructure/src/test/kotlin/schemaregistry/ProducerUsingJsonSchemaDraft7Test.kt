@@ -7,7 +7,6 @@ import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -28,17 +27,19 @@ class ProducerUsingJsonSchemaDraft7Test {
     // you can test the producer with the CLI:
     // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
-    fun avroProducer(){
+    fun createSchemaRecord(){
         val schema = """"""" + "\$" + "schema" + """""""
         val id = """"""" + "\$" + "id" + """""""
 
         val schemaPersonUsingDraft7 = Schema.Parser().parse("""
             {
                 $schema: "http://json-schema.org/draft-07/schema#",
-                $id: "http://example.com/root.json",
+                $id: "anewid",
                 "title": "The Root Schema",
-                "type": "record",
                 "name": "asdfasdf",
+                "subject": "newcategory",
+                "schemaType": "JSON",
+                "type": "record",
                 "fields": [
                         {"name": "aaa", "type": "string","format": "date-time"}
                 ], 
@@ -50,17 +51,59 @@ class ProducerUsingJsonSchemaDraft7Test {
             set("aaa", "2018-11-13T20:20:39+00:00")
         }.build()
 
-        val avroProducer: KafkaProducer<String, GenericRecord> = buildProducer()
+        val producer: KafkaProducer<String, GenericRecord> = buildProducer()
 
         // the topic is generated if doesnt exist
         // the schema is generated if doesnt exist, is named: my-generic-record-value-value
         // (it behaves in the same way that the CLI avro-producer
-        val topic = "producer-using-draft7-schemas"
-        avroProducer.send(
+        val topic = "my-topic-with-schema-record"
+        producer.send(
                 ProducerRecord(topic, genericRecordPerson)
         )
 
-        avroProducer.flush()
-        avroProducer.close()
+        producer.flush()
+        producer.close()
+    }
+
+    @Test
+    fun createSchemaObject(){
+        val schema = """"""" + "\$" + "schema" + """""""
+        val id = """"""" + "\$" + "id" + """""""
+
+        val schemaPersonUsingDraft7 = Schema.Parser().parse("""
+            {
+                $schema: "http://json-schema.org/draft-07/schema#",
+                $id: "anewid",
+                "title": "The Root Schema",
+                "name": "asdfasdf",
+                "subject": "newcategory",
+                "schemaType": "JSON",
+                "type": "object",
+                "properties": {
+                    "name":      { "type": "string" },
+                    "email":     { "type": "string" },
+                    "address":   { "type": "string" },
+                    "telephone": { "type": "string" }
+                },
+                "required": ["name", "email"]
+            }
+        """.trimIndent())
+
+        val genericRecordPerson = GenericRecordBuilder(schemaPersonUsingDraft7).apply{
+            set("aaa", "2018-11-13T20:20:39+00:00")
+        }.build()
+
+        val producer: KafkaProducer<String, GenericRecord> = buildProducer()
+
+        // the topic is generated if doesnt exist
+        // the schema is generated if doesnt exist, is named: my-generic-record-value-value
+        // (it behaves in the same way that the CLI avro-producer
+        val topic = "my-topic-with-schema-object"
+        producer.send(
+                ProducerRecord(topic, genericRecordPerson)
+        )
+
+        producer.flush()
+        producer.close()
     }
 }
