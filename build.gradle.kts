@@ -44,7 +44,9 @@ allprojects {
 		implementation("org.apache.kafka:kafka-streams:2.4.0")
 		// schema registry
 		implementation("org.apache.avro:avro:1.9.2")
+		// serializers
 		implementation("io.confluent:kafka-avro-serializer:5.3.0")
+		implementation("io.confluent:kafka-json-serializer:5.5.0")
 
 		testImplementation("org.apache.kafka:kafka-streams-test-utils:2.4.0")
 
