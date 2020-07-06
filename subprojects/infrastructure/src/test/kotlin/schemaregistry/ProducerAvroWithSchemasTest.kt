@@ -28,9 +28,9 @@ class ProducerAvroWithSchemasTest {
     fun avroProducer(){
         val schemaPerson = Schema.Parser().parse("""
             {
-              "type": "record",
               "name": "Person",
               "namespace": "myapp.infrastructure",
+              "type": "record",
               "fields": [
                 {"name": "firstName","type": "string"},
                 {"name": "lastName","type": "string"},
