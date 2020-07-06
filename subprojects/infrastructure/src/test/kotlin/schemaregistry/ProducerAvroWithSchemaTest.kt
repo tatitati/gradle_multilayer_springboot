@@ -10,7 +10,7 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class ProducerAvroWithSchemasTest {
+class ProducerAvroWithSchemaTest {
     fun buildProducer(): KafkaProducer<String, GenericRecord> {
         val properties = Properties().apply{
             put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:9094")
