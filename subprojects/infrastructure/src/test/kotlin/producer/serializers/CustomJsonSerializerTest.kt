@@ -51,11 +51,9 @@ class JsonProducerTest {
         val user = User(firstName = "namehere", lastName = "lastname here", age = (0 until 10000).random())
 
         val jsonProducer = buildProducer()
-        jsonProducer.send(
-                ProducerRecord(topic, user)
-        )
 
         jsonProducer.apply{
+            send(ProducerRecord(topic, user))
             flush()
             close()
         }
