@@ -1,4 +1,4 @@
-package myapp.test.infrastructure
+package myapp.test.infrastructure.KafkaStreams
 
 import myapp.infrastructure.kafkastream.FactoryRepositoryKafkaStream
 import org.apache.kafka.common.serialization.StringDeserializer
