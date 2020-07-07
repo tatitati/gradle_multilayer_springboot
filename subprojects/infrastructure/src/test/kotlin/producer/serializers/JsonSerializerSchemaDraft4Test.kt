@@ -1,11 +1,6 @@
 package myapp.test.infrastructure.producer.serializers
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import io.confluent.kafka.serializers.KafkaJsonSerializer
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
-import org.apache.avro.Schema
-import org.apache.avro.generic.GenericRecord
-import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
