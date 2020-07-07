@@ -11,7 +11,6 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
-import java.io.File
 import java.util.*
 
 class AvroSerializerSchemalessTest {
@@ -27,13 +26,12 @@ class AvroSerializerSchemalessTest {
         return KafkaProducer(properties)
     }
 
-    // you can test the producer with the CLI:
-    // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val topic = "book-topic-value-6"
+        val topic = "schemaless"
         val mystring = "=> name = wolf, country = spain"
 
+        // we didn't specify an schema, however the schema is also created and only contains "string"
         buildProducer().apply{
             send(ProducerRecord(topic, mystring))
             flush()
