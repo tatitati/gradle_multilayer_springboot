@@ -2,6 +2,7 @@ package myapp.test.infrastructure.producer.serializers
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.confluent.kafka.serializers.KafkaJsonSerializer
+import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -12,13 +13,13 @@ import java.util.*
 
 class JsonSerializerSchemaTest {
 
-    class Book(val title: String, val authorName: String)
+    class Book(val myField1: Int, val myField2: Double, myField3: String)
 
     fun buildProducer(): KafkaProducer<String, Book> {
         val properties = Properties().apply{
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
-            put("value.serializer", KafkaJsonSerializer::class.java)
+            put("value.serializer", KafkaJsonSchemaSerializer::class.java)
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
@@ -27,16 +28,36 @@ class JsonSerializerSchemaTest {
 
     @Test
     fun jsonProducer(){
-        val record = Book(title = "jungle book2 ", authorName = "tupapa")
+        val sche = "\$schema"
+        val id = "\$id"
+        val schema = Schema.Parser().parse("""
+            {
+              "$sche": "http://json-schema.org/draft-07/schema#",
+              "$id": "http://example.com/myURI.schema.json",
+              "title": "value_jsons_serializer_schemaless",
+              "description": "Sample schema to help you get started.",
+              "type": "object",
+              "properties": {
+                "myField1": {
+                  "type": "integer",
+                  "description": "The integer type is used for integral numbers."
+                },
+                "myField2": {
+                  "type": "number",
+                  "description": "The number type is used for any numeric type, either integers or floating point numbers."
+                },
+                "myField3": {
+                  "type": "string",
+                  "description": "The string type is used for strings of text."
+                }
+              }
+            }
+        """.trimIndent())
 
-        val avroRecord: GenericRecord = GenericRecordBuilder(schema).apply{
-            set("firstName", "sam")
-            set("lastName", "dedios")
-            set("age", 66)
-        }.build()
 
+        val book = Book(myField1 = 13, myField2 = 46.8, myField3 = "some text here")
         buildProducer().apply{
-            send(ProducerRecord(topic, record))
+            send(ProducerRecord("topic-jsonserializer-schema", book))
             flush()
             close()
         }
