@@ -8,9 +8,9 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class Book(val title: String, val authorName: String)
+class JsonSerializerSchemalessTest {
 
-class JsonPropertiesTest {
+    class Book(val title: String, val authorName: String)
 
     fun buildProducer(): KafkaProducer<String, Book> {
         val properties = Properties().apply{
@@ -23,15 +23,12 @@ class JsonPropertiesTest {
         return KafkaProducer(properties)
     }
 
-    // you can test the producer with the CLI:
-    // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val topic = "book-topic-value-6"
         val record = Book(title = "jungle book2 ", authorName = "tupapa")
 
         buildProducer().apply{
-            send(ProducerRecord(topic, record))
+            send(ProducerRecord("jsons-serializer-schemaless", record))
             flush()
             close()
         }

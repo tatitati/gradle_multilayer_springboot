@@ -38,15 +38,12 @@ class JsonProducerTest {
         return KafkaProducer(properties)
     }
 
-    // you can test the producer with the CLI:
-    // kafka-avro-console-consumer --topic my-generic-record-value --bootstrap-server $khost --property schema.registry.url=http://127.0.0.1:8081
     @Test
     fun jsonProducer(){
-        val topic = "my-json_serielizer-topic"
         val user = User(firstName = "namehere", lastName = "lastname here", age = (0 until 10000).random())
 
         buildProducer().apply{
-            send(ProducerRecord(topic, user))
+            send(ProducerRecord("topic-custom-serializer", user))
             flush()
             close()
         }
