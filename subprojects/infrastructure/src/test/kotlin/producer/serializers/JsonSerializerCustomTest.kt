@@ -8,7 +8,6 @@ import org.apache.kafka.common.serialization.Serializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-
 data class User(val firstName: String, val lastName: String, val age: Int)
 
 class UserSerializer: Serializer<User> {
@@ -24,9 +23,7 @@ class UserSerializer: Serializer<User> {
         }
         return retVal
     }
-
 }
-
 
 class JsonProducerTest {
 
