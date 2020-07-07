@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
 
-class AvroSerializer {
+class AvroSerializerSchemalessTest {
 
     fun buildProducer(): KafkaProducer<String, String> {
         val properties = Properties().apply{
@@ -24,7 +24,7 @@ class AvroSerializer {
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
-        return KafkaProducer<String, String>(properties)
+        return KafkaProducer(properties)
     }
 
     // you can test the producer with the CLI:
