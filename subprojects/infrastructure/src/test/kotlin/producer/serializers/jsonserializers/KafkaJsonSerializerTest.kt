@@ -16,7 +16,7 @@ class JsonSerializerSchemalessTest {
         val properties = Properties().apply{
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
-            put("value.serializer", KafkaJsonSerializer::class.java)
+            put("value.serializer", KafkaJsonSerializer::class.java) // this doesnt create any schema
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
@@ -28,7 +28,7 @@ class JsonSerializerSchemalessTest {
         val record = Book(title = "jungle book2 ", authorName = "tupapa")
 
         buildProducer().apply{
-            send(ProducerRecord("jsons-serializer-schemaless", record))
+            send(ProducerRecord("kafkajsonsserializer-schemaless", record))
             flush()
             close()
         }

@@ -32,7 +32,7 @@ class AvroSerializerSchemalessTest {
 
         // we didn't specify an schema, however the schema is also created and only contains "string"
         buildProducer().apply{
-            send(ProducerRecord("avroproducer-schemaless'", mystring))
+            send(ProducerRecord("avroproducer-schemaless", mystring))
             flush()
             close()
         }

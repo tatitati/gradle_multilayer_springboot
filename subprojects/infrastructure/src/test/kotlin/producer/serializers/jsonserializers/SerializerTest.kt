@@ -1,20 +1,10 @@
 package myapp.test.infrastructure.producer.serializers
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import io.confluent.kafka.serializers.KafkaJsonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer
 import org.apache.kafka.common.serialization.Serializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
-import java.io.IOException
-import java.io.StringWriter
 import java.util.*
 
 data class User(val firstName: String, val lastName: String, val age: Int)
@@ -39,7 +29,7 @@ class JsonProducerSchemalessTest {
         val properties = Properties().apply{
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
-            put("value.serializer", UserSerializer::class.java)
+            put("value.serializer", UserSerializer::class.java) // this doesnt create any schema
             put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
@@ -51,7 +41,7 @@ class JsonProducerSchemalessTest {
         val user = User(firstName = "anotherone", lastName = "lastname here", age = (0 until 10000).random())
 
         buildProducer().apply{
-            send(ProducerRecord("topic-custom-serializer7", user)).get()
+            send(ProducerRecord("topic-customserializer-1", user)).get()
             flush()
             close()
         }
