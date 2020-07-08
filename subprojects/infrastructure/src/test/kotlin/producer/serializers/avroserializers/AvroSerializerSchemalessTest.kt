@@ -1,12 +1,6 @@
-package myapp.test.infrastructure.producer.serializers
+package myapp.test.infrastructure.producer.serializers.avroserializers
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import org.apache.avro.Schema
-import org.apache.avro.file.DataFileWriter
-import org.apache.avro.generic.GenericDatumWriter
-import org.apache.avro.generic.GenericRecord
-import org.apache.avro.generic.GenericRecordBuilder
-import org.apache.avro.io.DatumWriter
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.IntegerSerializer

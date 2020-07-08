@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.producer.serializers
+package myapp.test.infrastructure.producer.serializers.avroserializers
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 import org.apache.avro.Schema
