@@ -13,7 +13,7 @@ data class User(val firstName: String, val lastName: String, val age: Int)
 class UserSerializer: Serializer<User> {
     override fun configure(map: Map<String?, *>?, b: Boolean) {}
     override fun close() {}
-    override fun serialize(arg0: String?, arg1: User?): ByteArray? {         
+    override fun serialize(arg0: String?, arg1: User?): ByteArray? {
         return ObjectMapper().writeValueAsString(arg1).toByteArray()
     }
 }
