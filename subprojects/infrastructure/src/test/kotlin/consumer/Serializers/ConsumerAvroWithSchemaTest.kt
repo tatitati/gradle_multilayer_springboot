@@ -25,10 +25,7 @@ class ConsumerAvroWithSchemaTest {
         consumer.subscribe(listOf(topic))
         return consumer
     }
-
-    // You can run the producer in the CLI with:
-    // kafka-avro-console-producer --broker-list $khost --topic my-generic-record-value --property schema.registry.url=http://127.0.0.1:8081 --property value.schema='{"type":"record","name":"Person","namespace":"myapp.infrastructure","fields":[{"name":"firstName","type":"string"},{"name":"lastName","type":"string"},{"name":"age","type":"int"}]}'
-    // {"firstName": "sam", "lastName": "dedios", "age": 55555}
+    
     @Test
     fun testBatching(){
         val avroConsumer: KafkaConsumer<String, GenericRecord> = buildConsumer()

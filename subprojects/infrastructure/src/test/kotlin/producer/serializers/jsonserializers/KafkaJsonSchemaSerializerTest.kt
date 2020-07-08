@@ -26,7 +26,8 @@ class KafkaJsonSchemaSerializerTest {
     fun jsonProducer(){
         val book = Book(myField1 = 13, myField2 = 46.8, myField3 = "some text here")
         buildProducer().apply{
-            send(ProducerRecord("topic-kafkajsonschemaserializer", book)).get()
+//            send(ProducerRecord("topic-kafkajsonschemaserializer", book)).get()
+            send(ProducerRecord("mydraft7", book)).get()
             flush()
             close()
         }
