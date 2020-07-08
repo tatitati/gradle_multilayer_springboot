@@ -58,7 +58,7 @@ class AvroSerializerSchemaTest {
         }.build()
 
         buildProducer().apply{
-            send(ProducerRecord("topic-withavrorecord-schema", avroRecord))
+            send(ProducerRecord("topic-withavrorecord-schema", avroRecord)).get()
             flush()
             close()
         }

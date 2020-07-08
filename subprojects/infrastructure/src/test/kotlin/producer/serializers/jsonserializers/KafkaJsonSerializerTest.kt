@@ -27,7 +27,7 @@ class KafkaJsonSerializerTest {
         val record = Book(title = "jungle book2 ", authorName = "tupapa")
 
         buildProducer().apply{
-            send(ProducerRecord("topic-kafkajsonsserializer", record))
+            send(ProducerRecord("topic-kafkajsonsserializer", record)).get()
             flush()
             close()
         }
