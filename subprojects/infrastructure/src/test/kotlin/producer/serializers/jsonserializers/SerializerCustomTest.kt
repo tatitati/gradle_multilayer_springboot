@@ -7,12 +7,12 @@ import org.apache.kafka.common.serialization.Serializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class SerializerTest {
+class SerializerCustomTest {
 
     data class User(val firstName: String, val lastName: String, val age: Int)
 
     class UserSerializer: Serializer<User> {
-        override fun configure(map: Map<String?, *>?, b: Boolean) {}
+        override fun configure(map: Map<String?, *>?, isKey: Boolean) {}
         override fun close() {}
         override fun serialize(topic: String?, user: User?): ByteArray? {
             val data = """
