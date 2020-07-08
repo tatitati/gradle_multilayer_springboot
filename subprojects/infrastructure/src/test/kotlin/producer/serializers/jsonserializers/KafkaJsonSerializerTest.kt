@@ -1,6 +1,5 @@
-package myapp.test.infrastructure.producer.serializers
+package myapp.test.infrastructure.producer.serializers.jsonserializers
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import io.confluent.kafka.serializers.KafkaJsonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -8,7 +7,7 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class JsonSerializerSchemalessTest {
+class KafkaJsonSerializerTest {
 
     class Book(val title: String, val authorName: String)
 
@@ -28,7 +27,7 @@ class JsonSerializerSchemalessTest {
         val record = Book(title = "jungle book2 ", authorName = "tupapa")
 
         buildProducer().apply{
-            send(ProducerRecord("kafkajsonsserializer-schemaless", record))
+            send(ProducerRecord("topic-kafkajsonsserializer", record))
             flush()
             close()
         }

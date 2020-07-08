@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.producer.serializers
+package myapp.test.infrastructure.producer.serializers.jsonserializers
 
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -7,7 +7,7 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class JsonSerializerSchemaDraft4Test {
+class KafkaJsonSchemaSerializerTest {
 
     data class Book(val myField1: Int, val myField2: Double, val myField3: String)
 
@@ -26,7 +26,7 @@ class JsonSerializerSchemaDraft4Test {
     fun jsonProducer(){
         val book = Book(myField1 = 13, myField2 = 46.8, myField3 = "some text here")
         buildProducer().apply{
-            send(ProducerRecord("topic-schema-jsonserializer", book))
+            send(ProducerRecord("topic-kafkajsonschemaserializer", book))
             flush()
             close()
         }
