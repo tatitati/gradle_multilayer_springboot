@@ -14,12 +14,12 @@ class SerializerTest {
     class UserSerializer: Serializer<User> {
         override fun configure(map: Map<String?, *>?, b: Boolean) {}
         override fun close() {}
-        override fun serialize(arg0: String?, arg1: User?): ByteArray? {
+        override fun serialize(topic: String?, user: User?): ByteArray? {
             val data = """
             {
-                "firstName":"${arg1!!.firstName}",
-                "lastName":"${arg1!!.lastName}",
-                "age":${arg1!!.age}
+                "firstNameeeeeee":"${user!!.firstName}",
+                "lastName":"${user!!.lastName}",
+                "age":${user!!.age}
             }""".trimIndent()
             return data.toByteArray()
         }
@@ -41,7 +41,7 @@ class SerializerTest {
         val user = User(firstName = "anotherone", lastName = "lastname here", age = (0 until 10000).random())
 
         buildProducer().apply{
-            send(ProducerRecord("topic-serializer", user)).get()
+            send(ProducerRecord("topic-serializer2", user)).get()
             flush()
             close()
         }
