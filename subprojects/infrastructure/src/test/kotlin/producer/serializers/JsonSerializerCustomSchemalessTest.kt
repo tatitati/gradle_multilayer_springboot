@@ -33,7 +33,7 @@ class UserSerializer: Serializer<User> {
     }
 }
 
-class JsonProducerTest {
+class JsonProducerSchemalessTest {
 
     fun buildProducer(): KafkaProducer<String, User> {
         val properties = Properties().apply{
