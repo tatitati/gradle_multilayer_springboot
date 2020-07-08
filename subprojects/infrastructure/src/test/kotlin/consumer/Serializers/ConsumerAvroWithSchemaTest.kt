@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.schemaregistry
+package myapp.test.infrastructure.consumer.Serializers
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import org.apache.avro.generic.GenericRecord
@@ -25,7 +25,7 @@ class ConsumerAvroWithSchemaTest {
         consumer.subscribe(listOf(topic))
         return consumer
     }
-    
+
     @Test
     fun testBatching(){
         val avroConsumer: KafkaConsumer<String, GenericRecord> = buildConsumer()
