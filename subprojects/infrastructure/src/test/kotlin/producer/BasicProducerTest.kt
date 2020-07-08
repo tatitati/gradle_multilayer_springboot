@@ -16,22 +16,15 @@ class BasicProducerTest {
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
         }
 
-        return KafkaProducer<String, String>(
-                properties
-        )
+        return KafkaProducer(properties)
     }
 
     @Test
     fun basicProducer(){
-        val producer = buildProducer()
-
-        val topic = "basic-producer"
-
-        producer.send(
-                ProducerRecord(topic, "this is my msg")
-        )
-
-        producer.flush()
-        producer.close()
+        buildProducer().apply{
+            send(ProducerRecord("topic-basic-producer", "this is my msg"))
+            flush()
+            close()
+        }
     }
 }
