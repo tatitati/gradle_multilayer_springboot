@@ -27,7 +27,7 @@ class SchemaRegistryClientTest {
         val avroSchema = client.getSchemaById(3) // {"type":"record","name":"value_jsons_serializer_schemaless","namespace":"com.mycorp.mynamespace","doc":"Sample schema to help you get started.","fields":[{"name":"myField1","type":"int","doc":"The int type is a 32-bit signed integer."},{"name":"myField2","type":"double","doc":"The double type is a double precision (64-bit) IEEE 754 floating-point number."},{"name":"myField3","type":"string","doc":"The string is a unicode character sequence."}]}
         println(avroSchema)
 
-        
+
 //        val jsonSchema = client.getSchemaById(2) // {"type":"record","name":"value_jsons_serializer_schemaless","namespace":"com.mycorp.mynamespace","doc":"Sample schema to help you get started.","fields":[{"name":"myField1","type":"int","doc":"The int type is a 32-bit signed integer."},{"name":"myField2","type":"double","doc":"The double type is a double precision (64-bit) IEEE 754 floating-point number."},{"name":"myField3","type":"string","doc":"The string is a unicode character sequence."}]}
 //        println(jsonSchema)
     }
