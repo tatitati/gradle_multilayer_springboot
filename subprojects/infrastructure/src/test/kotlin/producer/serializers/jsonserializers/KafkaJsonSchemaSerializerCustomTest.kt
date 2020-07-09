@@ -1,10 +1,17 @@
 package myapp.test.infrastructure.producer.serializers.jsonserializers
 
+import io.confluent.kafka.formatter.json.JsonSchemaMessageReader
+import io.confluent.kafka.schemaregistry.ParsedSchema
+import io.confluent.kafka.schemaregistry.json.JsonSchema
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializerConfig
+import org.apache.avro.Schema
+import org.apache.avro.generic.GenericRecord
+import org.apache.avro.generic.GenericRecordBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.record.Record
 import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -15,17 +22,16 @@ class KafkaJsonSchemaSerializerCustomTest {
 
     class CustomSerializer<Book>(): KafkaJsonSchemaSerializer<Book>() {
         override fun configure(config: Map<String?, *>?, isKey: Boolean) {
-            val config = Properties().apply{
+            val configSerializer = Properties().apply{
                 put(AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS, true)
                 put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081")
             }
 
             this.configure(
-                    KafkaJsonSchemaSerializerConfig(config)
+                    KafkaJsonSchemaSerializerConfig(configSerializer)
             )
         }
     }
-
 
     fun buildProducer(): KafkaProducer<String, Book> {
         val properties = Properties().apply{
