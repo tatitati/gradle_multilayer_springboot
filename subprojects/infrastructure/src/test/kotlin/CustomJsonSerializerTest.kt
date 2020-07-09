@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import myapp.test.infrastructure.schemaregistry.ProducerUsingJsonSchemaDraft7Test
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.io.StringWriter
@@ -27,7 +25,7 @@ class CustomJsonSerializerTest {
     }
 
     @Test
-    fun asdfasdf(){
+    fun basic(){
         val pupil = Pupil(myField1 = 4, myField2 = 56.7, myField3 = "some text here")
 
         // register serializer
