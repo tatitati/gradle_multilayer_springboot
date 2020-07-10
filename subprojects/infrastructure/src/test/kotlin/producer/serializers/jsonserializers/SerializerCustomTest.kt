@@ -30,7 +30,6 @@ class SerializerCustomTest {
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
             put("value.serializer", UserSerializer::class.java) // this doesnt create any schema
-            put("schema.registry.url", "http://127.0.0.1:8081")
         }
 
         return KafkaProducer(properties)
