@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.schemaregistry
+package myapp.test.infrastructure.jsonschemavalidators
 
 import org.everit.json.schema.loader.SchemaLoader
 import org.json.JSONObject

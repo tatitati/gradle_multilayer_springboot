@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.schemaregistry
+package myapp.test.infrastructure.jsonschemavalidators
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.worldturner.medeia.api.JsonSchemaVersion
