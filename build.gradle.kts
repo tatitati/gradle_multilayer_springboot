@@ -57,7 +57,7 @@ allprojects {
 		 implementation("io.confluent:kafka-json-schema-serializer:5.5.0")
 
 		// https://github.com/everit-org/json-schema
-//		implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.12.1")
+		implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.12.1")
 
 		// https://github.com/java-json-tools/json-schema-validator
 		// implementation ("com.github.java-json-tools:json-schema-validator:2.2.14")
