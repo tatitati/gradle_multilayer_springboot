@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class AvroSerializerCustomTest {
-    data class Book(val myField1: Int, val myField2: Double, val myField3: String)
 
     class CustomSerializer<Book>(): KafkaAvroSerializer() {
         override fun configure(config: Map<String?, *>?, isKey: Boolean) {
@@ -39,7 +38,7 @@ class AvroSerializerCustomTest {
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
             put("value.serializer", CustomSerializer::class.java)
-            put("schema.registry.url", "http://127.0.0.1:8081")
+            // having schema registry url config here is not needed, however in the serializer is mandatory 
         }
 
         return KafkaProducer(properties)
