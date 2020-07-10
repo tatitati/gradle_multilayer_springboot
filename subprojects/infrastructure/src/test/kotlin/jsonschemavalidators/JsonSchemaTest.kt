@@ -15,19 +15,20 @@ class JsonSchemaTest {
 
         val schemaText = """
             {
-            "$sch": "http://json-schema.org/draft-04/schema#",
+            "$sch": "http://json-schema.org/draft-07/schema#",
             "type": "object",
             "properties": {
                 "city": { "type": "string" },
                 "birth": { "type": "string", "format": "date" },
-                "field3": { "type": "string", "format": "idn-email" },
-                "field4": {
+                "iri": { "type": "string", "format": "iri" },
+                "idnemail": { "type": "string", "format": "idn-email" },
+                "conditional": {
                     "if": {"type": "string"},
                     "then": {"minLength": 3},
                     "else": {"const": 0}
                 }
               },
-            "required": ["birth", "field3", "field4"]    
+            "required": ["birth", "iri", "idnemail", "conditional"]    
             }
         """.trimIndent()
 
@@ -36,9 +37,10 @@ class JsonSchemaTest {
 
         val jsonToValidate = """
                 {
-                  "birth": "1970-01-01",
-                  "field3": "1234",
-                  "field4": "aaa"
+                  "birth": "2020-10-20",
+                  "iri": "asdf asdf",
+                  "idnemail": "1234",
+                  "conditional": 0
                 }
             """.trimIndent()
         schema.validate(JSONObject(jsonToValidate)) // throws a ValidationException if this object is invalid
