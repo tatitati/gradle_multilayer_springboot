@@ -38,7 +38,7 @@ class AvroSerializerCustomTest {
             put("bootstrap.servers", "localhost:9092")
             put("key.serializer", IntegerSerializer::class.java)
             put("value.serializer", CustomSerializer::class.java)
-            // having schema registry url config here is not needed, however in the serializer is mandatory 
+            // having schema registry url config here is not needed, however in the serializer is mandatory
         }
 
         return KafkaProducer(properties)
