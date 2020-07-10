@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test
 import java.io.StringWriter
 import java.net.URL
 
-data  class Mydata(val whatever: String)
+class MaidaValidatorTest {
 
-class SchemaResolutionTest {
+    data  class Mydata(val whatever: String)
+
     private val api = MedeiaJacksonApi()
     private val objectMapper = jacksonObjectMapper()
 
