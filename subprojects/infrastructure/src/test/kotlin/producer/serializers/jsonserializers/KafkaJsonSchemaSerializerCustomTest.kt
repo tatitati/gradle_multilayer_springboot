@@ -24,6 +24,7 @@ class KafkaJsonSchemaSerializerCustomTest {
         override fun configure(config: Map<String?, *>?, isKey: Boolean) {
             val configSerializer = Properties().apply{
                 put(AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS, true)
+                put(KafkaJsonSchemaSerializerConfig.SCHEMA_REGISTRY_URL_DOC, "http://127.0.0.1:8081,http://127.0.0.1:809")
                 put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081")
             }
 
