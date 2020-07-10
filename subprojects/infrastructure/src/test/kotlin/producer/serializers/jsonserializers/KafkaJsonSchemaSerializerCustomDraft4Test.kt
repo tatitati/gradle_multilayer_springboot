@@ -16,7 +16,7 @@ import org.apache.kafka.common.serialization.IntegerSerializer
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class KafkaJsonSchemaSerializerCustomTest {
+class KafkaJsonSchemaSerializerCustomDraft4Test {
 
     data class Book(val myField1: Int, val myField2: Double, val myField3: String)
 
