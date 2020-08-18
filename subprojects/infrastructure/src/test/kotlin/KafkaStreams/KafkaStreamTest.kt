@@ -27,10 +27,8 @@ class KafkaStreamTest {
 
         val repo = FactoryRepositoryKafkaStream(
                 "",
-                "input1",
-                "output1",
-                "input2",
-                "output2")
+                "input1", "output1",
+                "input2", "output2")
 
         val topology = repo.buildTopology()
 
