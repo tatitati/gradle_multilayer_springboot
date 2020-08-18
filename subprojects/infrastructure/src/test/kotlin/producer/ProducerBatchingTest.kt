@@ -13,8 +13,6 @@ class ProducerBatchingTest {
     fun buildProducer(): KafkaProducer<String, String>{
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
-            // put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerSerializer")
-            // put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer::class.java)
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
             // params for batching
@@ -31,19 +29,20 @@ class ProducerBatchingTest {
     fun testBatching(){
         val producer = buildProducer()
 
-        val topic = "batching-producer"
         val msgs = arrayOf("ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVE", "EIGHT", "NINE", "TEN")
 
-        msgs.forEach{
+        msgs.forEach{ msg ->
             Thread.sleep(500)
-            println("sending item: " + it)
+            println("sending item: " + msg)
             producer.send(
-                    ProducerRecord(topic, it)
+                    ProducerRecord("batching-producer", msg)
             )
         }
 
-        producer.flush()
-        producer.close()
+        producer.apply{
+            flush()
+            close()
+        }
     }
 
     // Output description:
