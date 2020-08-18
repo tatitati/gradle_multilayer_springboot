@@ -22,7 +22,7 @@ class BasicProducerTest {
     @Test
     fun basicProducer(){
         buildProducer().apply{
-            send(ProducerRecord("topic-basic-producer", "this is my msg"))
+            send(ProducerRecord("topic-BasicProducerTest", "this is my msg"))
             flush()
             close()
         }

@@ -32,7 +32,7 @@ class ProducerIdempotentTest {
 
         msgs.forEach{ msg ->
             producer.send(
-                    ProducerRecord("safe-producer", msg))
+                    ProducerRecord("topic-ProducerIdempotentTest", msg))
         }
 
         producer.apply{

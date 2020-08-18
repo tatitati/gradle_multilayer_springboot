@@ -29,7 +29,7 @@ class ProducerBatchingTest {
     fun testBatching(){
         val producer = buildProducer()
 
-        val msgs = arrayOf("ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVE", "EIGHT", "NINE", "TEN")
+        val msgs = arrayOf("ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN")
 
         msgs.forEach{ msg ->
             Thread.sleep(500)

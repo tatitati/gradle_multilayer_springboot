@@ -14,7 +14,7 @@ class ConsumerLastXmessagesTest {
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
-            put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-lastx-from-topic")
+            put(ConsumerConfig.GROUP_ID_CONFIG, "consumergroup-ConsumerLastXmessagesTest")
         }
 
         return KafkaConsumer<String, String>(
@@ -25,18 +25,19 @@ class ConsumerLastXmessagesTest {
     @Test
     fun experiment() {
         val consumer = buildConsumer()
-        val topic = "consumer-lastx-from-topic"
         // params for seek and assign
         val partition = 0
         val getLastX = 2L
 
-        val partitionToReadFrom: TopicPartition = TopicPartition(topic, partition)
+        val partitionToReadFrom: TopicPartition = TopicPartition("topic-ConsumerLastXmessagesTest", partition)
 
+        consumer.apply{
+            assign(listOf(partitionToReadFrom))
+            seekToEnd(listOf(partitionToReadFrom))
+        }
 
-        consumer.assign(listOf(partitionToReadFrom))
-        consumer.seekToEnd(listOf(partitionToReadFrom))
         val curentOffset = consumer.position(partitionToReadFrom)
-        println("\n\n=========> current position: " + curentOffset)
+        println("\n\n=========> starting to fetch batch from position: " + curentOffset)
         if (curentOffset <= getLastX) {
             consumer.seek(partitionToReadFrom, curentOffset)
         } else {
@@ -46,20 +47,22 @@ class ConsumerLastXmessagesTest {
 
         var limitReceived = getLastX
         while (true) {
-            println("\n\n=============================\n\n")
+            println("\n\nFetching batch....\n\n")
             val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(2))
-            println("\n\n==========> Received a batch with recods amount: " + batchOfRecords.count())
+            println("==========> Received a batch with recods amount: " + batchOfRecords.count())
 
             // process batch
             batchOfRecords.iterator().forEach {
                 limitReceived--
 
-                println("\n\n==========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
+                println("\nBatch record ===> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
 
                 consumer.commitSync()
             }
 
             if (limitReceived <= 0) break
+
+            Thread.sleep(2000)
         }
     }
 }
