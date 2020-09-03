@@ -7,7 +7,7 @@ import org.apache.kafka.common.KafkaException
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class ProducerIdempotentTest {
+class ProducerIdempotentWithTransactionsTest {
 
     fun buildProducer(): KafkaProducer<String, String>{
         val properties = Properties().apply{
