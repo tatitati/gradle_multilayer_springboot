@@ -44,20 +44,6 @@ class ProducerIdempotentWithTransactionsTest {
             producer.abortTransaction();
         }
 
-        // NOW IN ANOTHER TRANSACTION WE TRY again the same, but these messages won't be sent as they are duplicates :)
-        producer.initTransactions()
-        try {
-            msgs.forEach{ msg ->
-                producer.beginTransaction()
-                producer.send(ProducerRecord<String, String>("topic-ProducerIdempotentTest", msg))
-                producer.commitTransaction();
-            }
-
-        } catch (e: KafkaException){
-            print ("exception")
-            producer.abortTransaction();
-        }
-
         producer.apply{
             flush()
             close()
