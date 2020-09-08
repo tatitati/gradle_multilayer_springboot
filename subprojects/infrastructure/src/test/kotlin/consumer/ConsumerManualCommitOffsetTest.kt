@@ -16,7 +16,6 @@ class ConsumerManualCommitOffsetTest {
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-test")
             // manual commit of offsets
-            put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
             put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
         }
 
@@ -24,8 +23,7 @@ class ConsumerManualCommitOffsetTest {
                 properties
         )
 
-        val topic = "consumer-group-topic"
-        consumer.subscribe(listOf(topic))
+        consumer.subscribe(listOf("topic-offset-manual"))
         return consumer
     }
 
@@ -33,21 +31,14 @@ class ConsumerManualCommitOffsetTest {
     fun experiment(){
         val consumer = buildConsumer()
 
-        var receivedMessages = 0
-        var limitReceived = 10
         while (true) {
-            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(2))
-            println("Received a batch with recods amount: " + batchOfRecords.count())
+            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(20))
+            println("Received a batch with records amount: " + batchOfRecords.count())
 
-            // process batch
+            // process consumed batch records
             batchOfRecords.iterator().forEach {
-                receivedMessages++
-                limitReceived--
-
                 println("=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
                 consumer.commitSync()
-
-                if (limitReceived < 0) return
             }
         }
     }
