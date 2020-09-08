@@ -32,20 +32,11 @@ class ConsumerLimitBatchesSizeTest {
     fun experiment(){
         val consumer = buildConsumer()
 
-        var receivedMessages = 0
-        var limitReceived = 10
         while (true) {
-            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(2))
+            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(10))
             println("\n\n==========> Received a batch with recods amount: " + batchOfRecords.count())
-            Thread.sleep(1000)
-            // process batch
             batchOfRecords.iterator().forEach {
-                receivedMessages++
-                limitReceived--
-
                 println("=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
-
-                if (limitReceived < 0) return
             }
         }
     }
@@ -61,6 +52,8 @@ class ConsumerLimitBatchesSizeTest {
     //    =========> Partition: 0, Offset: 2, Key: null, Value: three
     //    =========> Partition: 0, Offset: 3, Key: null, Value: four
     //
+    //
+    //    10 seconds....
     //
     //    ==========> Received a batch with recods amount: 2
     //    =========> Partition: 0, Offset: 4, Key: null, Value: five
