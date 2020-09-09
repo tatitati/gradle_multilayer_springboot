@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.consumer
+package myapp.test.infrastructure.consumer.Batch
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-class BatchesTest {
+class MaxRecordsTest {
 
     fun buildConsumer(): KafkaConsumer<String, String> {
         val properties = Properties().apply{
@@ -23,7 +23,7 @@ class BatchesTest {
                 properties
         )
 
-        consumer.subscribe(listOf("Consumer-BatchesTest"))
+        consumer.subscribe(listOf("Consumer-MaxRecordsTest"))
         return consumer
     }
 
