@@ -36,12 +36,10 @@ class ManualCommitTest {
             val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(20))
             println("\n\n\nReceived a batch with records amount: " + batchOfRecords.count())
 
-            // process consumed batch records
             batchOfRecords.iterator().forEach {
                 println("=========> Record:")
-                val current2 = LocalDateTime.now()
                 println("\t=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
-                Thread.sleep(5_000) // 10 secs
+                Thread.sleep(5_000) // 5 secs
             }
 
             // commitAsync commit the offset for all the records fetched. It doesnt make sense to put this
