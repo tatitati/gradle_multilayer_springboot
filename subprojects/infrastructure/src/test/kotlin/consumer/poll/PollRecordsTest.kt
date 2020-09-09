@@ -16,8 +16,6 @@ class PollRecordsTest {
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-batch-size")
-            // Limit batches size in consumer
-            put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "2")
         }
 
         val consumer = KafkaConsumer<String, String>(
