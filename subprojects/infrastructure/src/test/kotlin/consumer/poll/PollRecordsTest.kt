@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.junit.jupiter.api.Test
 import java.time.Duration
+import java.time.LocalDateTime
 import java.util.*
 
 class PollRecordsTest {
@@ -23,7 +24,7 @@ class PollRecordsTest {
                 properties
         )
 
-        consumer.subscribe(listOf("consumer-batch-size-topic"))
+        consumer.subscribe(listOf("Consumer-PollRecordTest"))
         return consumer
     }
 
@@ -32,29 +33,44 @@ class PollRecordsTest {
         val consumer = buildConsumer()
 
         while (true) {
-            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(10000))
-            println("\n\n==========> Received a batch with recods amount: " + batchOfRecords.count())
+            val current = LocalDateTime.now()
+            println("\n\n\n====>Time: $current")
+
+            val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(20))
+            val current2 = LocalDateTime.now()
+            println("====> Poll finished. Time is: $current2")
+            println("====> Received a batch with recods amount: " + batchOfRecords.count())
             batchOfRecords.iterator().forEach {
-                println("=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
+                println("====> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
             }
         }
     }
 
-    // DESCRIPTION OUTPUT:
+    // Experiment 1: We don't send any message to the topic, we can see that the application block 20 seconds (the 20 seconds used as timeout for poll)
     // ==================
-    // Our consumer process messages in batches of two
+    //    ====>Time: 2020-09-09T22:59:48.217
+    //    ====> Poll finished. Time is: 2020-09-09T23:00:08.219
+    //    ====> Received a batch with recods amount: 0
+    //
+    //    ....AFTER 20 SECONDS...
+    //
+    //    ====>Time: 2020-09-09T23:00:08.219
+    //    ====> Poll finished. Time is: 2020-09-09T23:00:28.222
+    //    ====> Received a batch with recods amount: 0
+
+
+    // Experiment 2: We send data to the topic. We send that poll doesn't wait for 20 seconds, as soon as it receives some data, poll returns:
+    // ===================
+    //    ====>Time: 2020-09-09T23:04:01.745
+    //    ====> Poll finished. Time is: 2020-09-09T23:04:10.090
+    //    ====> Received a batch with recods amount: 1
+    //    ====> Partition: 0, Offset: 5, Key: null, Value: six
+    //
+    //    ....AFTER 3 SECONDS...
     //
     //
-    // OUPUT:
-    // =====
-    //    ==========> Received a batch with recods amount: 2
-    //    =========> Partition: 0, Offset: 2, Key: null, Value: three
-    //    =========> Partition: 0, Offset: 3, Key: null, Value: four
-    //
-    //
-    //    10 seconds....
-    //
-    //    ==========> Received a batch with recods amount: 2
-    //    =========> Partition: 0, Offset: 4, Key: null, Value: five
-    //    =========> Partition: 0, Offset: 5, Key: null, Value: six
+    //    ====>Time: 2020-09-09T23:04:10.090
+    //    ====> Poll finished. Time is: 2020-09-09T23:04:13.844
+    //    ====> Received a batch with recods amount: 1
+    //    ====> Partition: 0, Offset: 6, Key: null, Value: seven
 }
