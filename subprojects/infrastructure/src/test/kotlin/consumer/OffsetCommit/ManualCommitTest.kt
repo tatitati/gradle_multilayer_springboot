@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.consumer.CommitOffset
+package myapp.test.infrastructure.consumer.OffsetCommit
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
