@@ -15,7 +15,7 @@ class PollRecordsTest {
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
-            put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-group-batch-size")
+            put(ConsumerConfig.GROUP_ID_CONFIG, "consumer-poll")
         }
 
         val consumer = KafkaConsumer<String, String>(
