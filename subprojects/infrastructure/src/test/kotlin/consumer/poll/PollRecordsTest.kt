@@ -37,7 +37,6 @@ class PollRecordsTest {
             val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(20))
             val current2 = LocalDateTime.now()
             println("====> Poll finished. Time is: $current2")
-            println("====> Received a batch with recods amount: " + batchOfRecords.count())
             batchOfRecords.iterator().forEach {
                 println("====> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
             }
@@ -65,7 +64,6 @@ class PollRecordsTest {
     //    ====> Partition: 0, Offset: 5, Key: null, Value: six
     //
     //    ....AFTER 3 SECONDS...
-    //
     //
     //    ====>Time: 2020-09-09T23:04:10.090
     //    ====> Poll finished. Time is: 2020-09-09T23:04:13.844
