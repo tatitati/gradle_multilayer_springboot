@@ -33,18 +33,17 @@ class ManualCommitTest {
 
         while (true) {
             val batchOfRecords: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(20))
-            println("\n\n\nReceived a batch with records amount: " + batchOfRecords.count())
+            println("\n\n\n====> Received a batch with records amount: " + batchOfRecords.count())
 
             batchOfRecords.iterator().forEach {
-                println("=========> Record:")
-                println("\t=========> Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
+                println("====>  Partition: " + it.partition() + ", Offset: " + it.offset() + ", Key: " + it.key() + ", Value: " + it.value())
                 Thread.sleep(5_000) // 5 secs
             }
 
             // commitAsync commit the offset for all the records fetched. It doesnt make sense to put this
             // inside the loop, because it doesn't commit record by record, byt the whole batch
             consumer.commitSync()
-            println("\t=========> offset commited")
+            println("====>  offset commited")
         }
     }
 }
