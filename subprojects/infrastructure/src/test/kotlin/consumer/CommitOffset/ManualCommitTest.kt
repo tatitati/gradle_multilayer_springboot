@@ -23,7 +23,7 @@ class ManualCommitTest {
                 properties
         )
 
-        consumer.subscribe(listOf("topic-offset-manual"))
+        consumer.subscribe(listOf("Consumer_ManualCommitTest"))
         return consumer
     }
 

@@ -23,8 +23,7 @@ class AutoCommitTest {
                 properties
         )
 
-        val topic = "consumer-commitoffset-topic"
-        consumer.subscribe(listOf(topic))
+        consumer.subscribe(listOf("Consumer_AutoCommitTest"))
         return consumer
     }
 
