@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.consumer
+package myapp.test.infrastructure.consumer.CommitOffset
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
@@ -9,7 +9,7 @@ import java.util.*
 
 class ConsumerManualCommitOffsetTest {
 
-    fun buildConsumer(): KafkaConsumer<String, String>{
+    fun buildConsumer(): KafkaConsumer<String, String> {
         val properties = Properties().apply{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerDeserializer")
