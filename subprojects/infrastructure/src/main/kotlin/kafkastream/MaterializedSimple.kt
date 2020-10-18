@@ -6,6 +6,8 @@ import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.*
+import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.time.Duration
@@ -13,9 +15,9 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @SpringBootApplication
-class Windowing {
+class MaterializedSimple {
     val prop: Properties = Properties().apply {
-        put(StreamsConfig.APPLICATION_ID_CONFIG, "window-application")
+        put(StreamsConfig.APPLICATION_ID_CONFIG, "materialized-application")
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
@@ -24,24 +26,20 @@ class Windowing {
 
     @PostConstruct
     fun run(){
-        val input: KStream<String, String> = builder.stream("window_input", Consumed.with(Serdes.String(), Serdes.String()))
+        val input: KStream<String, String> = builder.stream("materializedsimple_input", Consumed.with(Serdes.String(), Serdes.String()))
 
-        val aggregated: KTable<Windowed<String>, Long> = input
+        val aggregated = input
                 .mapValues { textLine -> textLine.toLowerCase() }
                 .flatMapValues { loweredCase -> loweredCase.split(" ") }
                 .selectKey { key, word -> word }
-                .groupByKey()
-                // groups records with the same key in windows of 20 seconds
-                .windowedBy(
-                        TimeWindows.of(Duration.ofSeconds(20)))
-                // count recods with the same value in each window
-                .count()
+                .groupBy{key: String, value: String -> value}
+                .count(Materialized.`as`("mycount")) // TODO: how do I query this shit?
+
 
         aggregated.toStream()
-                .peek{window: Windowed<String>, value: Long -> println("WINDOW: ${window.window().startTime()} - ${window.window().endTime()}, KEY: ${window.key()}, VALUE: $value")}
                 // we have a windowed key, so we cannot send this directly to another topic. Cause of that we map to set the real key of the window
-                .map{key: Windowed<String>, count: Long -> KeyValue<String, Long>(key.key(), count) }
-                .to("window_output", Produced.with(Serdes.String(), Serdes.Long()))
+                .peek { key: String, value: Long -> println("${key} | ${value}") }
+                .to("materializedsimple_output", Produced.with(Serdes.StringSerde(), Serdes.Long()))
 
         // start
         val streams = KafkaStreams(builder.build(), prop)
@@ -51,7 +49,7 @@ class Windowing {
 }
 
 fun main(args: Array<String>) {
-    runApplication<Windowing>(*args)
+    runApplication<MaterializedSimple>(*args)
 
     // CLI for consumer:
     //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
