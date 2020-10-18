@@ -30,9 +30,9 @@ class KStreamSimple {
                 .mapValues { textLine -> textLine.toLowerCase() }
                 .flatMapValues { loweredCase -> loweredCase.split(" ") }
                 .selectKey { key, word -> word }
+//                .filter{ key, value -> value.toString() == "orange"} // only pass orange
+                .filterNot{ key, value -> value.toString() == "orange"} // only orange doesnt pass
                 .peek{key, value -> println("KEY: $key,\tVALUE: $value")}
-
-        processed.print(Printed.toSysOut())
 
         processed.to("kstream_output", Produced.with(Serdes.String(), Serdes.String()))
         val streams = KafkaStreams(builder.build(), prop)
