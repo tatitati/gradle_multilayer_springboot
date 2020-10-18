@@ -33,7 +33,8 @@ class MaterializedSimple {
                 .flatMapValues { loweredCase -> loweredCase.split(" ") }
                 .selectKey { key, word -> word }
                 .groupBy{key: String, value: String -> value}
-                .count(Materialized.`as`("mycount")) // TODO: how do I query this shit?
+                .count(Materialized.`as`("mycount"))
+                .filter { key: String, value: Long ->  key == "pink" } // this doesnt work????, why>??
 
 
         aggregated.toStream()
