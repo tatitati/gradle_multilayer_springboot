@@ -25,8 +25,8 @@ class WordCount {
 
     @PostConstruct
     fun run(){
-        val wordCountInput = builder.stream("input_topic", Consumed.with(Serdes.String(), Serdes.String()))
-        val wordCountsResult = wordCountInput
+        val wordCountInput: KStream<String, String> = builder.stream("input_topic", Consumed.with(Serdes.String(), Serdes.String()))
+        val wordCountsResult: KTable<String, Long> = wordCountInput
                 .mapValues { textLine -> textLine.toLowerCase() }
                 .flatMapValues { loweredCase -> loweredCase.split(" ") }
                 .selectKey { key, word -> word }
