@@ -14,14 +14,14 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @SpringBootApplication
-class WordCount {
-    val builder = StreamsBuilder()
+class Window {
     val prop = Properties().apply {
         put(StreamsConfig.APPLICATION_ID_CONFIG, "word-count-application")
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
     }
+    val builder = StreamsBuilder()
 
     @PostConstruct
     fun run(){
@@ -41,7 +41,7 @@ class WordCount {
 }
 
 fun main(args: Array<String>) {
-    runApplication<WordCount>(*args)
+    runApplication<Window>(*args)
 
     // CLI for consumer:
     //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
