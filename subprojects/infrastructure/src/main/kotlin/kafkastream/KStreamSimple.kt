@@ -6,7 +6,7 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.KTable
+import org.apache.kafka.streams.kstream.Printed
 import org.apache.kafka.streams.kstream.Produced
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -25,14 +25,16 @@ class KStreamSimple {
 
     @PostConstruct
     fun run(){
-        val wordCountInput: KStream<String, String> = builder.stream("kstream_input", Consumed.with(Serdes.String(), Serdes.String()))
-        val wordCountsResult: KStream<String, String> = wordCountInput
+        val mystream: KStream<String, String> = builder.stream("kstream_input", Consumed.with(Serdes.String(), Serdes.String()))
+        val processed: KStream<String, String> = mystream
                 .mapValues { textLine -> textLine.toLowerCase() }
                 .flatMapValues { loweredCase -> loweredCase.split(" ") }
                 .selectKey { key, word -> word }
                 .peek{key, value -> println("KEY: $key,\tVALUE: $value")}
 
-        wordCountsResult.to("kstream_output", Produced.with(Serdes.String(), Serdes.String()))
+        processed.print(Printed.toSysOut())
+
+        processed.to("kstream_output", Produced.with(Serdes.String(), Serdes.String()))
         val streams = KafkaStreams(builder.build(), prop)
 
         streams.start()
