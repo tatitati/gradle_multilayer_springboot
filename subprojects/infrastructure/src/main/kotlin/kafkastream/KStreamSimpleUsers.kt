@@ -76,10 +76,12 @@ class KStreamSimpleUsers {
                 "topic-input-person",
                 Consumed.with(Serdes.String(), Serdes.String()))
 
+        // convert to Person each json event
         val personStream: KStream<String, Person> = personJsonStream.mapValues { v ->
             jsonMapper.readValue(v, Person::class.java)
         }
 
+        // change the key of each Person
         val resStream: KStream<String, String> = personStream.map { _, p ->
             val birthDateLocal = p.birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
             val age = Period.between(birthDateLocal, LocalDate.now()).getYears()
