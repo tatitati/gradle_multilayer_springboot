@@ -26,19 +26,17 @@ import javax.annotation.PostConstruct
 class StreamWithTransformerSupplier {
     val builder = StreamsBuilder()
     val prop = Properties().apply {
-        put(StreamsConfig.APPLICATION_ID_CONFIG, "kstream-applicationX")
-        put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+        put(StreamsConfig.APPLICATION_ID_CONFIG, "kstream-applicationXX")
+        put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
     }
 
     fun sendToTopicSomeUsers(){
         val jsonMapper = ObjectMapper().apply {
             registerKotlinModule()
-            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            setDateFormat(StdDateFormat())
         }
 
         val properties = Properties().apply{
-            put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+            put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
         }
@@ -49,9 +47,12 @@ class StreamWithTransformerSupplier {
             val person = Person(
                     firstName = "firstname"+i,
                     lastName = "lastName"+i,
-                    birthDate = Date(2020, 3, 15)
+                    age = 34
             )
-            val futureResult = producer.send(ProducerRecord("kstream_inputX", jsonMapper.writeValueAsString(person)))
+            val futureResult = producer.send(ProducerRecord(
+                    "kstream_inputXX",
+                    jsonMapper.writeValueAsString(person)
+            ))
             futureResult.get()
         }
 
@@ -67,9 +68,9 @@ class StreamWithTransformerSupplier {
         val serdesSink: Produced<String, Person>     = Produced.with(Serdes.String(), SerdesPerson())
 
         builder
-                .stream<String, Person>("kstream_inputX", serdesSource)
+                .stream<String, Person>("kstream_inputXX", serdesSource)
                 .transform(TransformerSupplier {PreferencesTransformer()})
-                .to("kstream_output", serdesSink)
+                .to("kstream_outputX", serdesSink)
 
         val streams = KafkaStreams(builder.build(), prop)
         streams.start()
@@ -77,20 +78,19 @@ class StreamWithTransformerSupplier {
     }
 }
 
-class PreferencesTransformer: Transformer<String, Person, KeyValue<String, Person>?> {
-    override fun init(context: ProcessorContext) {
-        println("THIS IS INIT!")
+class PreferencesTransformer: Transformer<String, Person, KeyValue<String, Person>> {
+    override fun init(context: ProcessorContext) {}
+
+    override fun transform(key: String?, record: Person): KeyValue<String, Person>? {
+        val transformedPerson = Person(
+                firstName = record.firstName + " [TRANSFORMED!!!]",
+                lastName = record.lastName,
+                age = record.age
+        )
+        return KeyValue.pair(record.firstName, transformedPerson)
     }
 
-    override fun transform(key: String, record: Person): KeyValue<String, Person>? {
-        println("THIS IS TRANSFORM!")
-        println(record)
-        return KeyValue.pair(key, record)
-    }
-
-    override fun close() {
-        println("THIS IS CLOSE!")
-    }
+    override fun close() {}
 }
 
 
