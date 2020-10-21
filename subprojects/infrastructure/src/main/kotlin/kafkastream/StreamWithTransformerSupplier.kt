@@ -81,7 +81,7 @@ class StreamWithTransformerSupplier {
 class PreferencesTransformer: Transformer<String, Person, KeyValue<String, Person>> {
     override fun init(context: ProcessorContext) {}
 
-    override fun transform(key: String?, record: Person): KeyValue<String, Person>? {
+    override fun transform(key: String?, record: Person): KeyValue<String, Person> {
         val transformedPerson = Person(
                 firstName = record.firstName + " [TRANSFORMED!!!]",
                 lastName = record.lastName,
