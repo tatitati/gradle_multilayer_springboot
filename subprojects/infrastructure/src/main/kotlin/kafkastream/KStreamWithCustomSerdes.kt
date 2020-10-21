@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import kafkastream.pojos.DeliveryAddress
 import myapp.infrastructure.kafkastream.pojos.Person
+import myapp.infrastructure.kafkastream.serdes.AppSerdes
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -71,14 +73,9 @@ class KStreamWithCustomSerdes {
             put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
         }
 
-        val personJsonStream: KStream<String, String> = streamsBuilder.stream<String, String>(
+        val personStream: KStream<String, Person> = streamsBuilder.stream<String, Person>(
                 "topic-input-person",
-                Consumed.with(Serdes.String(), Serdes.String()))
-
-        // convert to Person each json event
-        val personStream: KStream<String, Person> = personJsonStream.mapValues { v ->
-            jsonMapper.readValue(v, Person::class.java)
-        }
+                Consumed.with(Serdes.String(), AppSerdes()))
 
         // change the key of each Person
         val resStream: KStream<String, String> = personStream.map { _, p ->
