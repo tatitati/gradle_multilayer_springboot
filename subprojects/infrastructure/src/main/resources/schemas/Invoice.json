@@ -1,0 +1,20 @@
+{
+    "invoiceNumber": {"type": "string"},
+    "createdTime": {"type": "object", "javaType": "java.lang.Long"},
+    "customerCardNo": {"type": "string"},
+    "totalAmount": {"type": "number"},
+    "numberOfItem": {"type": "integer"},
+    "paymentMethod": {"type": "string"},
+    "taxableAmount": {"type": "number"},
+    "cGST": {"type": "number"},
+    "sGCT": {"type": "number"},
+    "cESS": {"type": "number"},
+    "invoiceLineItems": {
+        "type": "array" ,
+        "items": {
+          "type": "object",
+          "$ref": "LineItem.json"
+        }
+    }
+}
+

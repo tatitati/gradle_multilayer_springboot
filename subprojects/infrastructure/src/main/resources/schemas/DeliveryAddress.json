@@ -1,0 +1,7 @@
+{
+    "addressLine": {"type": "string"},
+    "city": {"type": "string"},
+    "state": {"type": "string"},
+    "pinCode": {"type": "string"},
+    "contactNumber": {"type": "string"}
+}
