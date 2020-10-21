@@ -28,13 +28,13 @@ import javax.annotation.PostConstruct
 
 @SpringBootApplication
 class KStreamWithCustomSerdes {
-    val jsonMapper = ObjectMapper().apply {
-        registerKotlinModule()
-        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        setDateFormat(StdDateFormat())
-    }
+
 
     fun sendToTopicSomeUsers(){
+        val jsonMapper = ObjectMapper().apply {
+            registerKotlinModule()
+        }
+
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
@@ -47,7 +47,7 @@ class KStreamWithCustomSerdes {
             val person = Person(
                     firstName = "firstname"+i,
                     lastName = "lastName"+i,
-                    birthDate = Date(2020, 3, 15)
+                    age = 56
             )
             val futureResult = producer.send(ProducerRecord("topic-input-person", jsonMapper.writeValueAsString(person)))
             futureResult.get()
@@ -67,8 +67,6 @@ class KStreamWithCustomSerdes {
         val props = Properties().apply {
             put(StreamsConfig.APPLICATION_ID_CONFIG, "kstream-application")
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-            put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
-            put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
         }
 
         val personStream: KStream<String, Person> = streamsBuilder.stream<String, Person>(
@@ -77,9 +75,7 @@ class KStreamWithCustomSerdes {
 
         // change the key of each Person
         val resStream: KStream<String, String> = personStream.map { _, p ->
-            val birthDateLocal = p.birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            val age = Period.between(birthDateLocal, LocalDate.now()).getYears()
-            KeyValue("${p.firstName} ${p.lastName}", "$age")
+            KeyValue("${p.firstName} ${p.lastName}", p.age.toString())
         }
 
         resStream.to("topic-output-person", Produced.with(Serdes.String(), Serdes.String()))
@@ -94,7 +90,4 @@ class KStreamWithCustomSerdes {
 
 fun main(args: Array<String>) {
     runApplication<KStreamWithCustomSerdes>(*args)
-
-    // CLI for consumer:
-    //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
 }

@@ -1,12 +1,13 @@
 package myapp.infrastructure.kafkastream.store
 
+import myapp.infrastructure.kafkastream.pojos.Person
+import myapp.infrastructure.kafkastream.serdes.SerdesPerson
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.*
-import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.ValueTransformer
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.StoreBuilder
@@ -17,20 +18,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 
-class MyTransformer: ValueTransformer<String, String>{
-    override fun init(context: ProcessorContext?) {
-        TODO("Not yet implemented")
-    }
 
-    override fun transform(value: String?): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun close() {
-        TODO("Not yet implemented")
-    }
-
-}
 
 @SpringBootApplication
 class MaterializedSimple {
@@ -47,35 +35,32 @@ class MaterializedSimple {
     @PostConstruct
     fun run(){
         val builder = StreamsBuilder()
-        val ks0: KStream<String, String> = builder.stream("materializedsimple_input", Consumed.with(Serdes.String(), Serdes.String()))
+        val ks0: KStream<String, Person> = builder.stream("materializedsimple_input", Consumed.with(Serdes.String(), SerdesPerson()))
 
-        val aggregated: KTable<String, Long> = ks0
-                .mapValues { textLine -> textLine.toLowerCase() }
-                .flatMapValues { loweredCase -> loweredCase.split(" ") }
-                .selectKey { key, word -> word }
-                .groupBy{ key: String, value: String -> value}
-                .count(Materialized.`as`("mycount"))
-                .filter { key: String, value: Long ->  key == "pink" } // this doesnt work????, why>??
+        val ksowithKey: KStream<String, Person> = ks0
+                .selectKey { key, person -> person.firstName }
 
+        // create store
         val mystore: StoreBuilder<KeyValueStore<String, Long>> = Stores.keyValueStoreBuilder(
                 Stores.inMemoryKeyValueStore("mystore"),
-                Serdes.StringSerde(),
-                Serdes.LongSerde()
-        )
+                Serdes.StringSerde(), Serdes.LongSerde())
 
         builder.addStateStore(mystore)
-//        aggregated.transformValues({MyTransformer()}, "mystore", "asdf")
 
-        aggregated.toStream()
-                // we have a windowed key, so we cannot send this directly to another topic. Cause of that we map to set the real key of the window
-                .peek { key: String, value: Long -> println("${key} | ${value}") }
-                .to("materializedsimple_output", Produced.with(Serdes.StringSerde(), Serdes.Long()))
+
+//        ksowithKey.transform()
+
+
+//        ksowithKey.toStream()
+//                // we have a windowed key, so we cannot send this directly to another topic. Cause of that we map to set the real key of the window
+//                .peek { key: String, value: Long -> println("${key} | ${value}") }
+//                .to("materializedsimple_output", Produced.with(Serdes.StringSerde(), Serdes.Long()))
 
         // start
-        val topology: Topology = builder.build()
-        val streams = KafkaStreams(topology, this.getProps())
-        streams.start()
-        Runtime.getRuntime().addShutdownHook(Thread(streams::close))
+//        val topology: Topology = builder.build()
+//        val streams = KafkaStreams(topology, this.getProps())
+//        streams.start()
+//        Runtime.getRuntime().addShutdownHook(Thread(streams::close))
     }
 }
 

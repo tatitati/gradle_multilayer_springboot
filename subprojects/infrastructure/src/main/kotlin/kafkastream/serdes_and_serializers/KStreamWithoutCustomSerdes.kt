@@ -30,8 +30,6 @@ import javax.annotation.PostConstruct
 class KStreamWithoutCustomSerdes {
     val jsonMapper = ObjectMapper().apply {
         registerKotlinModule()
-        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        setDateFormat(StdDateFormat())
     }
 
     fun sendToTopicSomeUsers(){
@@ -47,7 +45,7 @@ class KStreamWithoutCustomSerdes {
             val person = Person(
                     firstName = "firstname"+i,
                     lastName = "lastName"+i,
-                    birthDate = Date(2020, 3, 15)
+                    age = 45
             )
             val futureResult = producer.send(ProducerRecord("topic-input-person", jsonMapper.writeValueAsString(person)))
             futureResult.get()
@@ -67,8 +65,6 @@ class KStreamWithoutCustomSerdes {
         val props = Properties().apply {
             put(StreamsConfig.APPLICATION_ID_CONFIG, "kstream-application")
             put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-            put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
-            put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String()::class.java)
         }
 
         val personJsonStream: KStream<String, String> = streamsBuilder.stream<String, String>(
@@ -82,9 +78,7 @@ class KStreamWithoutCustomSerdes {
 
         // change the key of each Person
         val resStream: KStream<String, String> = personStream.map { _, p ->
-            val birthDateLocal = p.birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            val age = Period.between(birthDateLocal, LocalDate.now()).getYears()
-            KeyValue("${p.firstName} ${p.lastName}", "$age")
+            KeyValue("${p.firstName} ${p.lastName}", p.age.toString())
         }
 
         resStream.to("topic-output-person", Produced.with(Serdes.String(), Serdes.String()))

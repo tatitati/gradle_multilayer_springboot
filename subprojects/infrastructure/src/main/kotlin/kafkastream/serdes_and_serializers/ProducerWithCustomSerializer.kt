@@ -27,7 +27,7 @@ class ProducerWithCustomSerializer {
             val person = Person(
                     firstName = "firstname"+i,
                     lastName = "lastName"+i,
-                    birthDate = Date(2020, 3, 15)
+                    age = 86
             )
             val futureResult = producer.send(ProducerRecord("topic-input-person", person))
             futureResult.get()
@@ -40,7 +40,4 @@ class ProducerWithCustomSerializer {
 
 fun main(args: Array<String>) {
     runApplication<ProducerWithCustomSerializer>(*args)
-
-    // CLI for consumer:
-    //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
 }

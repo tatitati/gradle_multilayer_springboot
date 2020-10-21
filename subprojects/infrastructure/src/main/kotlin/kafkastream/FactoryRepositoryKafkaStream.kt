@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.util.*
 
-@Configuration
+
 class FactoryRepositoryKafkaStream(
         @Value ("\${spring.kafka.bootstrap-servers}") val bootstrapServers: String,
         @Value ("\${spring.kafka.kstreams.input-topic}") val inputTopic: String,
