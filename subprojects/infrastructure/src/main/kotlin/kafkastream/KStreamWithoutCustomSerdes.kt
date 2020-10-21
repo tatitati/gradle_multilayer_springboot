@@ -27,7 +27,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @SpringBootApplication
-class KStreamSimpleUsers {
+class KStreamWithoutCustomSerdes {
     val jsonMapper = ObjectMapper().apply {
         registerKotlinModule()
         disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
@@ -99,7 +99,7 @@ class KStreamSimpleUsers {
 }
 
 fun main(args: Array<String>) {
-    runApplication<KStreamSimpleUsers>(*args)
+    runApplication<KStreamWithoutCustomSerdes>(*args)
 
     // CLI for consumer:
     //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
