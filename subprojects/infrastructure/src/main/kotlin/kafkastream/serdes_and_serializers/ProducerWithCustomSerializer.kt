@@ -1,29 +1,12 @@
-package myapp.infrastructure.kafkastream
+package myapp.infrastructure.kafkastream.serdes_and_serializers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.util.StdDateFormat
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import myapp.infrastructure.kafkastream.pojos.Person
-import myapp.infrastructure.kafkastream.serdes.AppSerdes
 import myapp.infrastructure.kafkastream.serdes.PersonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.common.serialization.StringSerializer
-import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.KeyValue
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Produced
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 import java.util.*
 import javax.annotation.PostConstruct
 

@@ -7,7 +7,7 @@ import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
 
-class AppSerdes : Serde<Person> {
+class SerdesPerson : Serde<Person> {
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
     override fun close() {}
     override fun deserializer(): Deserializer<Person> = PersonDeserializer()

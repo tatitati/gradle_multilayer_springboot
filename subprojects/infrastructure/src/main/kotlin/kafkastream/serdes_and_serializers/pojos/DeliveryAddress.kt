@@ -1,4 +1,4 @@
-package kafkastream.pojos
+package kafkastream.serdes_and_serializers.pojos
 
 data class DeliveryAddress(
     val addressLine: AddressLine = AddressLine(),

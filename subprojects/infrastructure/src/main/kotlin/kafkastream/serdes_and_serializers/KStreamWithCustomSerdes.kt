@@ -1,11 +1,11 @@
-package myapp.infrastructure.kafkastream
+package myapp.infrastructure.kafkastream.serdes_and_serializers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import myapp.infrastructure.kafkastream.pojos.Person
-import myapp.infrastructure.kafkastream.serdes.AppSerdes
+import myapp.infrastructure.kafkastream.serdes.SerdesPerson
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -73,7 +73,7 @@ class KStreamWithCustomSerdes {
 
         val personStream: KStream<String, Person> = streamsBuilder.stream<String, Person>(
                 "topic-input-person",
-                Consumed.with(Serdes.String(), AppSerdes()))
+                Consumed.with(Serdes.String(), SerdesPerson()))
 
         // change the key of each Person
         val resStream: KStream<String, String> = personStream.map { _, p ->

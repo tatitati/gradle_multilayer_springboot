@@ -1,4 +1,4 @@
-package myapp.infrastructure.kafkastream
+package myapp.infrastructure.kafkastream.serdes_and_serializers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
