@@ -82,15 +82,13 @@ class MaterializedSimple {
         val serdesSource: Consumed<String, PurchaseItem>   = Consumed.with(Serdes.String(), SerdesPurchaseItem())
         val serdesSink: Produced<String, BillTotal> = Produced.with(Serdes.String(), SerdesBillTotal())
 
-        val mystream: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
-
-        mystream
+        val inputPurchaseItems: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
+        val statefulAccumulatedBills: KStream<String, BillTotal> = inputPurchaseItems
                 .transformValues(
                         ValueTransformerSupplier { MyValueTransformer() },
                         storeName
                 )
-                .to(topicOutput, serdesSink)
-
+        statefulAccumulatedBills.to(topicOutput, serdesSink)
 
         // START
         val topology: Topology = builder.build()
