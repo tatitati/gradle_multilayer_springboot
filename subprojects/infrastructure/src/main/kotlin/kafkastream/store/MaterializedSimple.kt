@@ -35,6 +35,7 @@ class MaterializedSimple {
 
     }
 
+    // FIXTURES
     fun sendSomePurchaseItems(){
         val jsonMapper = ObjectMapper().apply {
             registerKotlinModule()
