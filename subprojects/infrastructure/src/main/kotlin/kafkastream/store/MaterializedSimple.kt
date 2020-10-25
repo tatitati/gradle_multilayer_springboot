@@ -68,19 +68,19 @@ class MaterializedSimple {
     fun run(){
         this.sendToTopicSomeUsers()
 
+        // CREATE STORE
+        val mystore: StoreBuilder<KeyValueStore<String, Int>> = Stores
+                .keyValueStoreBuilder(
+                        Stores.inMemoryKeyValueStore("mystore"),
+                        Serdes.StringSerde(), Serdes.IntegerSerde())
+        builder.addStateStore(mystore)
+
+        // KAFKA STREAMS
         val serdesSource: Consumed<String, Person>   = Consumed.with(Serdes.String(), SerdesPerson())
         val serdesSink: Produced<String, Person> = Produced.with(Serdes.String(), SerdesPerson())
 
         val ks0: KStream<String, Person> = builder.stream("materializedsimple_input", serdesSource)
         val ks0WithKey: KStream<String, Person> = ks0.selectKey { key, person -> person.firstName }
-
-        // CREATE STORE
-        val mystore: StoreBuilder<KeyValueStore<String, Int>> = Stores
-                .keyValueStoreBuilder(
-                    Stores.inMemoryKeyValueStore("mystore"),
-                    Serdes.StringSerde(), Serdes.IntegerSerde())
-        builder.addStateStore(mystore)
-
 
         ks0WithKey
                 .transformValues(
