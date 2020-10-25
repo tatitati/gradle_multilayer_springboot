@@ -67,7 +67,6 @@ class TransformerSupplierTest {
         val serdesSink: Produced<String, Friend> = Produced.with(Serdes.String(), SerdesFriend())
 
         val mystream: KStream<String, Person> = builder.stream<String, Person>(topicInput, serdesSource)
-
         val processed: KStream<String, Friend> = mystream.transform(TransformerSupplier {PreferencesTransformer()})
         processed.to(topicOutput, serdesSink)
 
