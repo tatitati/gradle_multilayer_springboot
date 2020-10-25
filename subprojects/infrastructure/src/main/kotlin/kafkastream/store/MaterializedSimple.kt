@@ -97,7 +97,7 @@ class MaterializedSimple {
     }
 }
 
-// LETS USE OUR STORE! :) , THIS IS WHAT MAKE OUR KAFKA STREAM STATEFUL
+// LETS USE OUR STORE! :) , THIS IS WHAT MAKE OUR KAFKA STREAM STATEFUL: Inputs are Purachase Items, and Outputs are BillTotal
 class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     lateinit var stateStore: KeyValueStore<String, Int>
 
