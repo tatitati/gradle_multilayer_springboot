@@ -106,7 +106,11 @@ class MyValueTransformer: ValueTransformer<Person, Person> {
     }
 
     override fun transform(value: Person?): Person {
-        TODO("Not yet implemented")
+        val accumulatedAge = stateStore.get(value!!.firstName)
+        val totalAccumulated = accumulatedAge + value.age
+        stateStore.put(value!!.firstName, totalAccumulated)
+
+        return value
     }
 
     override fun close() {
