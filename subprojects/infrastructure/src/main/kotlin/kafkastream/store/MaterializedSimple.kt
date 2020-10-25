@@ -32,7 +32,6 @@ class MaterializedSimple {
     val prop = Properties().apply {
         put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-stateful-with-store")
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
-
     }
 
     // FIXTURES
