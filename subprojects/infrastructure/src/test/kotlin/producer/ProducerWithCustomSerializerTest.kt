@@ -1,19 +1,18 @@
-package myapp.infrastructure.kafkastream.serdes_and_serializers
+package myapp.test.infrastructure.producer
 
 import myapp.infrastructure.kafkastream.pojos.Person
 import myapp.infrastructure.kafkastream.serdes.PersonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.junit.jupiter.api.Test
 import java.util.*
 import javax.annotation.PostConstruct
 
-@SpringBootApplication
-class ProducerWithCustomSerializer {
+class ProducerWithCustomSerializerTest {
+    val topicInput = "topic-input-person"
 
-    @PostConstruct
+    @Test
     fun run(){
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
@@ -29,15 +28,11 @@ class ProducerWithCustomSerializer {
                     lastName = "lastName"+i,
                     age = 86
             )
-            val futureResult = producer.send(ProducerRecord("topic-input-person", person))
+            val futureResult = producer.send(ProducerRecord(topicInput, person))
             futureResult.get()
         }
 
         producer.flush()
         producer.close()
     }
-}
-
-fun main(args: Array<String>) {
-    runApplication<ProducerWithCustomSerializer>(*args)
 }
