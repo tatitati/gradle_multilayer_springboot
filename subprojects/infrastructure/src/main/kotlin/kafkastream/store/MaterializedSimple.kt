@@ -49,14 +49,10 @@ class MaterializedSimple {
 
         val producer = KafkaProducer<String, String>(properties)
 
-
         for (i in 1..10) {
-            val anyprice = FakerSimple.anyOf(listOf(1, 200, 3000, 40000))
-            val anyuserName = FakerSimple.anyOf(listOf("Michael", "John", "Raul", "Francisco"))
-
             val purchaseItem = PurchaseItem(
-                    firstName = anyuserName,
-                    price = anyprice
+                    firstName = FakerSimple.anyOf(listOf("Michael", "John", "Raul", "Francisco")),
+                    price = FakerSimple.anyOf(listOf(1, 200, 3000, 40000))
             )
             val futureResult = producer.send(ProducerRecord(
                     topicInput, // topic
