@@ -2,8 +2,10 @@ package myapp.infrastructure.kafkastream.store
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import myapp.infrastructure.kafkastream.pojos.Person
-import myapp.infrastructure.kafkastream.serdes.SerdesPerson
+import myapp.infrastructure.kafkastream.serdes.SerdesBillTotal
+import myapp.infrastructure.kafkastream.serdes.SerdesPurchaseItem
+import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.BillTotal
+import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.PurchaseItem
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -26,6 +28,9 @@ import javax.annotation.PostConstruct
 @SpringBootApplication
 class MaterializedSimple {
 
+    val topicInput = "inputXXX"
+    val topicOutput = "outputXXX"
+    val storeName = "mystore"
     val builder = StreamsBuilder()
     val prop = Properties().apply {
         put(StreamsConfig.APPLICATION_ID_CONFIG, "materialized-application")
@@ -33,7 +38,7 @@ class MaterializedSimple {
 
     }
 
-    fun sendToTopicSomeUsers(){
+    fun sendSomePurchaseItems(){
         val jsonMapper = ObjectMapper().apply {
             registerKotlinModule()
         }
@@ -46,17 +51,18 @@ class MaterializedSimple {
 
         val producer = KafkaProducer<String, String>(properties)
 
-        for(i in 1..10) {
-            val person = Person(
-                    firstName = "firstname",
-                    lastName = "lastName",
-                    age = 34
-            )
-            val futureResult = producer.send(ProducerRecord(
-                    "kstream_inputXX",
-                    jsonMapper.writeValueAsString(person)
-            ))
-            futureResult.get()
+        for(j in 1..5) {
+            for (i in 1..10) {
+                val purchaseItem = PurchaseItem(
+                        firstName = "firstname" + i,
+                        price = 10
+                )
+                val futureResult = producer.send(ProducerRecord(
+                        topicInput,
+                        jsonMapper.writeValueAsString(purchaseItem)
+                ))
+                futureResult.get()
+            }
         }
 
         producer.flush()
@@ -66,28 +72,28 @@ class MaterializedSimple {
 
     @PostConstruct
     fun run(){
-        this.sendToTopicSomeUsers()
+        this.sendSomePurchaseItems()
 
         // CREATE STORE
         val mystore: StoreBuilder<KeyValueStore<String, Int>> = Stores
                 .keyValueStoreBuilder(
-                        Stores.inMemoryKeyValueStore("mystore"),
+                        Stores.inMemoryKeyValueStore(storeName),
                         Serdes.StringSerde(), Serdes.IntegerSerde())
         builder.addStateStore(mystore)
 
         // KAFKA STREAMS
-        val serdesSource: Consumed<String, Person>   = Consumed.with(Serdes.String(), SerdesPerson())
-        val serdesSink: Produced<String, Person> = Produced.with(Serdes.String(), SerdesPerson())
+        val serdesSource: Consumed<String, PurchaseItem>   = Consumed.with(Serdes.String(), SerdesPurchaseItem())
+        val serdesSink: Produced<String, BillTotal> = Produced.with(Serdes.String(), SerdesBillTotal())
 
-        val ks0: KStream<String, Person> = builder.stream("materializedsimple_input", serdesSource)
-        val ks0WithKey: KStream<String, Person> = ks0.selectKey { key, person -> person.firstName }
+        val ks0: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
+        val ks0WithKey: KStream<String, PurchaseItem> = ks0.selectKey { key, purchaseItem -> purchaseItem.firstName }
 
         ks0WithKey
                 .transformValues(
                         ValueTransformerSupplier { MyValueTransformer() },
-                        "mystore"
+                        storeName
                 )
-                .to("myoutput_topic", serdesSink)
+                .to(topicOutput, serdesSink)
 
 
         // START
@@ -98,19 +104,23 @@ class MaterializedSimple {
     }
 }
 
-class MyValueTransformer: ValueTransformer<Person, Person> {
+class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     lateinit var stateStore: KeyValueStore<String, Int>
 
     override fun init(context: ProcessorContext?) {
         this.stateStore = context!!.getStateStore("mystore") as KeyValueStore<String, Int>
     }
 
-    override fun transform(value: Person?): Person {
-        val accumulatedAge = stateStore.get(value!!.firstName)
-        val totalAccumulated = accumulatedAge + value.age
+    override fun transform(value: PurchaseItem?): BillTotal {
+        val accumulatedBill = stateStore.get(value!!.firstName) ?: 0
+        val totalAccumulated = accumulatedBill + value.price
         stateStore.put(value!!.firstName, totalAccumulated)
 
-        return value
+        return BillTotal(
+                value!!.firstName,
+                totalAccumulated
+        )
+
     }
 
     override fun close() {
@@ -122,7 +132,4 @@ class MyValueTransformer: ValueTransformer<Person, Person> {
 
 fun main(args: Array<String>) {
     runApplication<MaterializedSimple>(*args)
-
-    // CLI for consumer:
-    //    kafka-console-consumer --bootstrap-server $khost --topic output_topic --group mygroup --property  key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property  value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --property print.key=true --property print.value=true
 }
