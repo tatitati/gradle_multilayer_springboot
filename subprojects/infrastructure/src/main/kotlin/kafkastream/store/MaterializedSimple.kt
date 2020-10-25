@@ -9,9 +9,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.StringSerializer
-import org.apache.kafka.streams.KeyValue
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.*
 import org.apache.kafka.streams.kstream.*
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
@@ -71,40 +69,43 @@ class MaterializedSimple {
         this.sendToTopicSomeUsers()
 
         val serdesSource: Consumed<String, Person>   = Consumed.with(Serdes.String(), SerdesPerson())
-        val serdesSink: Produced<String, Person> = Produced.with(Serdes.String(), SerdesPerson())=
+        val serdesSink: Produced<String, Person> = Produced.with(Serdes.String(), SerdesPerson())
 
         val ks0: KStream<String, Person> = builder.stream("materializedsimple_input", serdesSource)
         val ks0WithKey: KStream<String, Person> = ks0.selectKey { key, person -> person.firstName }
 
         // CREATE STORE
-        val mystore: StoreBuilder<KeyValueStore<String, Int>> = Stores.keyValueStoreBuilder(
-                Stores.inMemoryKeyValueStore("mystore"),
-                Serdes.StringSerde(), Serdes.IntegerSerde())
+        val mystore: StoreBuilder<KeyValueStore<String, Int>> = Stores
+                .keyValueStoreBuilder(
+                    Stores.inMemoryKeyValueStore("mystore"),
+                    Serdes.StringSerde(), Serdes.IntegerSerde())
         builder.addStateStore(mystore)
 
 
-        ks0WithKey.transformValues(ValueTransformerSupplier { MyValueTransformer() })
+        ks0WithKey
+                .transformValues(
+                        ValueTransformerSupplier { MyValueTransformer() },
+                        "mystore"
+                )
+                .to("myoutput_topic", serdesSink)
 
 
-//        ksowithKey.toStream()
-//                // we have a windowed key, so we cannot send this directly to another topic. Cause of that we map to set the real key of the window
-//                .peek { key: String, value: Long -> println("${key} | ${value}") }
-//                .to("materializedsimple_output", Produced.with(Serdes.StringSerde(), Serdes.Long()))
-
-        // start
-//        val topology: Topology = builder.build()
-//        val streams = KafkaStreams(topology, this.getProps())
-//        streams.start()
-//        Runtime.getRuntime().addShutdownHook(Thread(streams::close))
+        // START
+        val topology: Topology = builder.build()
+        val streams = KafkaStreams(topology, prop)
+        streams.start()
+        Runtime.getRuntime().addShutdownHook(Thread(streams::close))
     }
 }
 
-class MyValueTransformer: ValueTransformer<Person, KeyValue<String, Person>> {
+class MyValueTransformer: ValueTransformer<Person, Person> {
+    lateinit var stateStore: KeyValueStore<String, Int>
+
     override fun init(context: ProcessorContext?) {
-        TODO("Not yet implemented")
+        this.stateStore = context!!.getStateStore("mystore") as KeyValueStore<String, Int>
     }
 
-    override fun transform(value: Person?): KeyValue<String, Person> {
+    override fun transform(value: Person?): Person {
         TODO("Not yet implemented")
     }
 
