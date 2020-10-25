@@ -101,7 +101,7 @@ class MaterializedSimple {
 class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     lateinit var stateStore: KeyValueStore<String, Int>
 
-    override fun init(context: ProcessorContext?) {
+    override fun init(context: ProcessorContext?) { // If I implement just Transformer, then I don't have any context that allow me to access to the store
         this.stateStore = context!!.getStateStore("mystore") as KeyValueStore<String, Int>
     }
 
