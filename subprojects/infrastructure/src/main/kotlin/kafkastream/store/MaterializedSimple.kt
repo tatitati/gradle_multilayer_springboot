@@ -22,9 +22,6 @@ import org.springframework.boot.runApplication
 import java.util.*
 import javax.annotation.PostConstruct
 
-
-
-
 @SpringBootApplication
 class MaterializedSimple {
 
@@ -33,7 +30,7 @@ class MaterializedSimple {
     val storeName = "mystore"
     val builder = StreamsBuilder()
     val prop = Properties().apply {
-        put(StreamsConfig.APPLICATION_ID_CONFIG, "materialized-application")
+        put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-stateful-with-store")
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
 
     }
@@ -122,14 +119,11 @@ class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
                 value!!.firstName,
                 totalAccumulated
         )
-
     }
 
     override fun close() {
         TODO("Not yet implemented")
     }
-
-
 }
 
 fun main(args: Array<String>) {
