@@ -59,8 +59,9 @@ class MaterializedSimple {
                     price = anyprice
             )
             val futureResult = producer.send(ProducerRecord(
-                    topicInput,
-                    jsonMapper.writeValueAsString(purchaseItem)
+                    topicInput, // topic
+                    purchaseItem.firstName, // key
+                    jsonMapper.writeValueAsString(purchaseItem) // value
             ))
             futureResult.get()
         }
@@ -85,10 +86,9 @@ class MaterializedSimple {
         val serdesSource: Consumed<String, PurchaseItem>   = Consumed.with(Serdes.String(), SerdesPurchaseItem())
         val serdesSink: Produced<String, BillTotal> = Produced.with(Serdes.String(), SerdesBillTotal())
 
-        val ks0: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
-        val ks0WithKey: KStream<String, PurchaseItem> = ks0.selectKey { key, purchaseItem -> purchaseItem.firstName }
+        val mystream: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
 
-        ks0WithKey
+        mystream
                 .transformValues(
                         ValueTransformerSupplier { MyValueTransformer() },
                         storeName
@@ -104,6 +104,7 @@ class MaterializedSimple {
     }
 }
 
+// LETS USE OUR STORE! :) , THIS IS WHAT MAKE OUR KAFKA STREAM STATEFUL
 class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     lateinit var stateStore: KeyValueStore<String, Int>
 
@@ -114,7 +115,7 @@ class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     override fun transform(value: PurchaseItem?): BillTotal {
         val accumulatedBill = stateStore.get(value!!.firstName) ?: 0
         val totalAccumulated = accumulatedBill + value.price
-        stateStore.put(value!!.firstName, totalAccumulated)
+        stateStore.put(value!!.firstName, totalAccumulated) // we use firstname as our key
 
         return BillTotal(
                 value!!.firstName,
