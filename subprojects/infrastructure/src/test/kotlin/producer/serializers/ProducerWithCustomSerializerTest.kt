@@ -1,4 +1,4 @@
-package myapp.test.infrastructure.producer
+package myapp.test.infrastructure.producer.serializers
 
 import myapp.infrastructure.kafkastream.pojos.Person
 import myapp.infrastructure.kafkastream.serdes.PersonSerializer
@@ -7,7 +7,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.Test
 import java.util.*
-import javax.annotation.PostConstruct
 
 class ProducerWithCustomSerializerTest {
     val topicInput = "topic-input-person"
@@ -24,8 +23,8 @@ class ProducerWithCustomSerializerTest {
 
         for(i in 1..10) {
             val person = Person(
-                    firstName = "firstname"+i,
-                    lastName = "lastName"+i,
+                    firstName = "firstname" + i,
+                    lastName = "lastName" + i,
                     age = 86
             )
             val futureResult = producer.send(ProducerRecord(topicInput, person))
