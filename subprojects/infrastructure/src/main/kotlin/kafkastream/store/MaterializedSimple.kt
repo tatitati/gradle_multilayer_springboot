@@ -108,12 +108,9 @@ class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     override fun transform(value: PurchaseItem?): BillTotal {
         val accumulatedBill = stateStore.get(value!!.firstName) ?: 0
         val totalAccumulated = accumulatedBill + value.price
-        stateStore.put(value!!.firstName, totalAccumulated) // we use firstname as our key
+        stateStore.put(value!!.firstName, totalAccumulated) // we use firstname as our key in the store
 
-        return BillTotal(
-                value!!.firstName,
-                totalAccumulated
-        )
+        return BillTotal(value!!.firstName, totalAccumulated)
     }
 
     override fun close() {
