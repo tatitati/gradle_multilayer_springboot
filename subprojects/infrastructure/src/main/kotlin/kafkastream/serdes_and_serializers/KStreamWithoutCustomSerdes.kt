@@ -1,14 +1,11 @@
 package myapp.infrastructure.kafkastream.serdes_and_serializers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import myapp.infrastructure.kafkastream.pojos.Person
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.IntegerSerializer
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.kafka.streams.KafkaStreams
@@ -20,9 +17,6 @@ import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.Produced
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -32,7 +26,7 @@ class KStreamWithoutCustomSerdes {
         registerKotlinModule()
     }
 
-    fun sendToTopicSomeUsers(){
+    fun fixtures(){
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
@@ -59,7 +53,7 @@ class KStreamWithoutCustomSerdes {
 
     @PostConstruct
     fun run(){
-        this.sendToTopicSomeUsers()
+        this.fixtures()
 
         val streamsBuilder = StreamsBuilder()
         val props = Properties().apply {
