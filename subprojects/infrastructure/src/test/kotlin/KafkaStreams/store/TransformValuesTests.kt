@@ -1,4 +1,4 @@
-package myapp.infrastructure.kafkastream.store
+package myapp.test.infrastructure.KafkaStreams.store
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -6,25 +6,29 @@ import myapp.infrastructure.kafkastream.serdes.SerdesBillTotal
 import myapp.infrastructure.kafkastream.serdes.SerdesPurchaseItem
 import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.BillTotal
 import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.PurchaseItem
+import myapp.test.domain.Faker
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.StringSerializer
-import org.apache.kafka.streams.*
-import org.apache.kafka.streams.kstream.*
+import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.StreamsBuilder
+import org.apache.kafka.streams.StreamsConfig
+import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.KStream
+import org.apache.kafka.streams.kstream.Produced
+import org.apache.kafka.streams.kstream.ValueTransformer
+import org.apache.kafka.streams.kstream.ValueTransformerSupplier
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.junit.jupiter.api.Test
 import java.util.*
-import javax.annotation.PostConstruct
 
-@SpringBootApplication
-class MaterializedSimple {
-
+class TransformValuesTests {
     val topicInput = "inputXXX"
     val topicOutput = "outputXXX"
     val storeName = "mystore"
@@ -50,8 +54,8 @@ class MaterializedSimple {
 
         for (i in 1..10) {
             val purchaseItem = PurchaseItem(
-                    firstName = FakerSimple.anyOf(listOf("Michael", "John", "Raul", "Francisco")),
-                    price = FakerSimple.anyOf(listOf(1, 200, 3000, 40000))
+                    firstName = Faker.anyOf(listOf("Michael", "John", "Raul", "Francisco")),
+                    price = Faker.anyOf(listOf(1, 200, 3000, 40000))
             )
             val futureResult = producer.send(ProducerRecord(
                     topicInput, // topic
@@ -66,7 +70,7 @@ class MaterializedSimple {
     }
 
 
-    @PostConstruct
+    @Test
     fun run(){
         this.sendSomePurchaseItems()
 
@@ -78,7 +82,7 @@ class MaterializedSimple {
         builder.addStateStore(mystore)
 
         // KAFKA STREAMS
-        val serdesSource: Consumed<String, PurchaseItem>   = Consumed.with(Serdes.String(), SerdesPurchaseItem())
+        val serdesSource: Consumed<String, PurchaseItem> = Consumed.with(Serdes.String(), SerdesPurchaseItem())
         val serdesSink: Produced<String, BillTotal> = Produced.with(Serdes.String(), SerdesBillTotal())
 
         val inputPurchaseItems: KStream<String, PurchaseItem> = builder.stream(topicInput, serdesSource)
@@ -94,6 +98,7 @@ class MaterializedSimple {
         val streams = KafkaStreams(topology, prop)
         streams.start()
         Runtime.getRuntime().addShutdownHook(Thread(streams::close))
+        Thread.sleep(10000)
     }
 }
 
@@ -118,6 +123,3 @@ class MyValueTransformer: ValueTransformer<PurchaseItem, BillTotal> {
     }
 }
 
-fun main(args: Array<String>) {
-    runApplication<MaterializedSimple>(*args)
-}

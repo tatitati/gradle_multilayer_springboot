@@ -2,8 +2,6 @@ package myapp.test.infrastructure.KafkaStreams
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.PurchaseItem
-import myapp.infrastructure.kafkastream.store.FakerSimple
 import myapp.test.domain.Faker
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
