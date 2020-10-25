@@ -3,7 +3,9 @@ package myapp.test.infrastructure.KafkaStreams
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import myapp.infrastructure.kafkastream.pojos.Person
+import myapp.infrastructure.kafkastream.serdes.SerdesFriend
 import myapp.infrastructure.kafkastream.serdes.SerdesPerson
+import myapp.infrastructure.kafkastream.serdes_and_serializers.pojos.Friend
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -13,14 +15,10 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
-import org.apache.kafka.streams.kstream.Transformer
-import org.apache.kafka.streams.kstream.TransformerSupplier
+import org.apache.kafka.streams.kstream.*
 import org.apache.kafka.streams.processor.ProcessorContext
 import org.junit.jupiter.api.Test
 import java.util.*
-import javax.annotation.PostConstruct
 
 class TransformerSupplierTest {
     val builder = StreamsBuilder()
@@ -66,12 +64,12 @@ class TransformerSupplierTest {
         this.fixtures()
 
         val serdesSource: Consumed<String, Person> = Consumed.with(Serdes.String(), SerdesPerson())
-        val serdesSink: Produced<String, Person> = Produced.with(Serdes.String(), SerdesPerson())
+        val serdesSink: Produced<String, Friend> = Produced.with(Serdes.String(), SerdesFriend())
 
-        builder
-                .stream<String, Person>(topicInput, serdesSource)
-                .transform(TransformerSupplier {PreferencesTransformer()})
-                .to(topicOutput, serdesSink)
+        val mystream: KStream<String, Person> = builder.stream<String, Person>(topicInput, serdesSource)
+
+        val processed: KStream<String, Friend> = mystream.transform(TransformerSupplier {PreferencesTransformer()})
+        processed.to(topicOutput, serdesSink)
 
         val streams = KafkaStreams(builder.build(), prop)
         streams.start()
@@ -80,16 +78,15 @@ class TransformerSupplierTest {
     }
 }
 
-class PreferencesTransformer: Transformer<String, Person, KeyValue<String, Person>> {
+class PreferencesTransformer: Transformer<String, Person, KeyValue<String, Friend>> {
     override fun init(context: ProcessorContext) {}
 
-    override fun transform(key: String?, record: Person): KeyValue<String, Person> {
-        val transformedPerson = Person(
-                firstName = record.firstName + " [TRANSFORMED!!!]",
-                lastName = record.lastName,
-                age = record.age
+    override fun transform(key: String?, record: Person): KeyValue<String, Friend> {
+        val friend = Friend(
+                firstName = record.firstName,
+                lastName = record.lastName
         )
-        return KeyValue.pair(record.firstName, transformedPerson)
+        return KeyValue.pair(record.firstName, friend)
     }
 
     override fun close() {}
