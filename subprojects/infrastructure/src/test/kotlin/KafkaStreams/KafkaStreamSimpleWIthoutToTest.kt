@@ -41,11 +41,12 @@ class KafkaStreamSimpleWIthoutToTest {
 
         val producer = KafkaProducer<String, String>(properties)
 
-        for (topic in listOf(topicInput1, topicInput2)){
+        val topics = listOf(topicInput1, topicInput2)
+        for (topicIndex in topics.indices){
             for (i in 1..10) {
                 val futureResult = producer.send(ProducerRecord(
-                        topic,
-                        Faker.anyWord()
+                        topics[topicIndex],
+                        "TOPIC: ${topics[topicIndex]} \tVALUE: $i"
                 ))
                 futureResult.get()
             }
