@@ -13,13 +13,13 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Produced
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class KafkaStreamSimpleWIthoutToTest {
     val builder = StreamsBuilder()
-    val topicInput = "kstream_input"
+    val topicInput1 = "kstream_input1"
+    val topicInput2 = "kstream_input2"
     val topicOutput = "kstream_output"
     val prop = Properties().apply {
         put(StreamsConfig.APPLICATION_ID_CONFIG, "kstream-application")
@@ -41,20 +41,16 @@ class KafkaStreamSimpleWIthoutToTest {
 
         val producer = KafkaProducer<String, String>(properties)
 
-        for (i in 1..10) {
-            val words = Faker.anyOf(listOf(
-                    "orange pink red",
-                    "blue pink pink pink",
-                    "pink red red red pink blue",
-                    "red orange orange red blue"
-            ))
-
-            val futureResult = producer.send(ProducerRecord(
-                    topicInput,
-                    jsonMapper.writeValueAsString(words)
-            ))
-            futureResult.get()
+        for (topic in listOf(topicInput1, topicInput2)){
+            for (i in 1..10) {
+                val futureResult = producer.send(ProducerRecord(
+                        topic,
+                        Faker.anyWord()
+                ))
+                futureResult.get()
+            }
         }
+
 
         producer.flush()
         producer.close()
@@ -64,8 +60,8 @@ class KafkaStreamSimpleWIthoutToTest {
     fun run(){
         this.fixtures()
 
-        val mystream: KStream<String, String> = builder.stream(topicInput, Consumed.with(Serdes.String(), Serdes.String()))
-        mystream.peek{key, value -> println("KEY: $key,\tVALUE: $value")}
+        val mystream: KStream<String, String> = builder.stream(listOf(topicInput1, topicInput2), Consumed.with(Serdes.String(), Serdes.String()))
+        mystream.peek{key, value -> println("KEY: $key.,\tVALUE: $value")}
 //        processed.to(topicOutput, Produced.with(Serdes.String(), Serdes.String()))
         val streams = KafkaStreams(builder.build(), prop)
 
