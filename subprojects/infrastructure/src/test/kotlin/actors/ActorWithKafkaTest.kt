@@ -18,7 +18,6 @@ class MessageStop(): Message()
 class MessageStart(): Message()
 
 
-
 class ActorWithKafkaTest {
 
     @Test
