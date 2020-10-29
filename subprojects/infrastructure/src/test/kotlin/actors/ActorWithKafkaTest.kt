@@ -2,8 +2,6 @@ package myapp.test.infrastructure.actors
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ChannelIterator
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.runBlocking
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -40,9 +38,9 @@ class ActorWithKafkaTest {
 
         fun CoroutineScope.consumerActor() = actor<Message> {
             while(true) {
-                val message = channel.poll()
+                val messageToActor = channel.poll()
 
-                when(message) {
+                when(messageToActor) {
                     is MessageStop -> {
                         println("Stopping consumer in actor")
                         consumer.close()
