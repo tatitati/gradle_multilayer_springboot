@@ -53,6 +53,7 @@ class ActorsTest{
             // send a message to get a counter value from an actor
             val response = CompletableDeferred<Int>()
             counter.send(GetCounter(response))
+
             println("Counter = ${response.await()}")
             counter.close() // shutdown the actor
         }
