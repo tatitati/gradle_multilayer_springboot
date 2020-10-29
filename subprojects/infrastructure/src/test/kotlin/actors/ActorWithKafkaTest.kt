@@ -19,10 +19,7 @@ open class Message(){}
 class MessageStop(): Message() {
 }
 
-class MessageStart(): Message() {
-}
-
-class MessageHeartbeat(): Message() {
+class MessageRewind(): Message() {
 }
 
 
@@ -47,12 +44,11 @@ class ActorWithKafkaTest {
 
                 when(message) {
                     is MessageStop -> {
-                        println("STOP MESSAGE RECEIVED")
+                        println("Stopping consumer in actor")
                         consumer.close()
                     }
                     else -> {
                         val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
-                        println("POLLING......")
                         for(record in records){
                             println(record.value())
                         }
