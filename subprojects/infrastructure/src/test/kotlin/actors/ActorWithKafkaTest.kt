@@ -2,6 +2,8 @@ package myapp.test.infrastructure.actors
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ChannelIterator
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.runBlocking
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -17,7 +19,10 @@ open class Message(){}
 class MessageStop(): Message() {
 }
 
-class MessageRewind(): Message() {
+class MessageStart(): Message() {
+}
+
+class MessageHeartbeat(): Message() {
 }
 
 
@@ -38,15 +43,15 @@ class ActorWithKafkaTest {
 
         fun CoroutineScope.consumerActor() = actor<Message> {
             while(true) {
-                val messageToActor = channel.poll()
-
-                when(messageToActor) {
+                val message = channel.poll()
+                when(message) {
                     is MessageStop -> {
-                        println("Stopping consumer in actor")
+                        println("STOP MESSAGE RECEIVED")
                         consumer.close()
                     }
                     else -> {
                         val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
+                        println("POLLING......")
                         for(record in records){
                             println(record.value())
                         }
@@ -55,13 +60,18 @@ class ActorWithKafkaTest {
             }
         }
 
-        runBlocking<Unit> {
+        fun main() = runBlocking<Unit> {
             val consumerActor = consumerActor()
+            consumerActor.send(MessageStart())
+            consumerActor.send(MessageHeartbeat())
             val deferred = CompletableDeferred<Int>()
             Thread.sleep(10000)
             consumerActor.send(MessageStop())
             println(deferred.await())
             consumerActor.close()
         }
+
+        main()
+
     }
 }
