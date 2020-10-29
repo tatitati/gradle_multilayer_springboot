@@ -63,7 +63,6 @@ class ActorWithKafkaTest {
         runBlocking<Unit> {
             val consumerActor = consumerActor()
             consumerActor.send(MessageStart())
-            consumerActor.send(MessageHeartbeat())
             val deferred = CompletableDeferred<Int>()
             Thread.sleep(10000)
             consumerActor.send(MessageStop())
@@ -71,7 +70,7 @@ class ActorWithKafkaTest {
             consumerActor.close()
         }
 
-        
+
 
     }
 }
