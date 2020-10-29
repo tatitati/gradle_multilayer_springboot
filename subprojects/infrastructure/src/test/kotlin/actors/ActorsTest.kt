@@ -42,7 +42,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
 class ActorsTest{
 
     @Test
-    fun `asdfasdf`(){
+    fun `I can ran an actor`(){
         runBlocking<Unit> {
             val counter = counterActor() // create the actor
             withContext(Dispatchers.Default) {
