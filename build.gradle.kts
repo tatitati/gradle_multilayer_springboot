@@ -4,9 +4,10 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 description = "My project description here"
 
 plugins {
+//	kotlin("jvm") version "1.4.0" apply false
 	id("org.springframework.boot") version "2.3.0.RELEASE" apply false
 	id("io.spring.dependency-management") version "1.0.9.RELEASE" apply false
-	id("org.jetbrains.kotlin.jvm") version "1.3.72"
+	id("org.jetbrains.kotlin.jvm") version "1.4.0"
 	id("org.jetbrains.kotlin.plugin.spring") version "1.3.72" apply false
 	id("java-test-fixtures")
 }
@@ -16,6 +17,8 @@ allprojects {
 	apply(plugin = "io.spring.dependency-management")
 	apply(plugin = "org.jetbrains.kotlin.jvm")
 	apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+//	apply(plugin = "jvm")
+
 
 	group = "com.example"
 	version = "0.0.1-SNAPSHOT"
@@ -27,6 +30,7 @@ allprojects {
 
 	repositories {
 		mavenCentral()
+		jcenter()
 		maven {
 			url = uri("https://packages.confluent.io/maven")
 		}
@@ -65,6 +69,9 @@ allprojects {
 		// kafka schema validatos
 		implementation("com.worldturner.medeia:medeia-validator-jackson:1.1.0")
 		testImplementation("org.apache.kafka:kafka-streams-test-utils:2.4.0")
+
+		// actors
+		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
 
 
 		testImplementation("org.springframework.boot:spring-boot-starter-test") {

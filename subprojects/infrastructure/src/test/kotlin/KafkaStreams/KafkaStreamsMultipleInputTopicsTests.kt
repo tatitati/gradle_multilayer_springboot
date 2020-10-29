@@ -28,9 +28,6 @@ class KafkaStreamsMultipleInputTopicsTests {
     }
 
     fun fixtures(){
-        val jsonMapper = ObjectMapper().apply {
-            registerKotlinModule()
-        }
 
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094")
