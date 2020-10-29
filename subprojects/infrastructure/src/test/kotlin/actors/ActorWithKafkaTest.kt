@@ -43,7 +43,7 @@ class ActorWithKafkaTest {
 
         fun CoroutineScope.consumerActor() = actor<Message> {
             while(true) {
-                val message = channel.poll()
+                val message: Message? = channel.poll()
                 when(message) {
                     is MessageStop -> {
                         println("STOP MESSAGE RECEIVED")
@@ -60,7 +60,7 @@ class ActorWithKafkaTest {
             }
         }
 
-        fun main() = runBlocking<Unit> {
+        runBlocking<Unit> {
             val consumerActor = consumerActor()
             consumerActor.send(MessageStart())
             consumerActor.send(MessageHeartbeat())
@@ -71,7 +71,7 @@ class ActorWithKafkaTest {
             consumerActor.close()
         }
 
-        main()
+        
 
     }
 }
