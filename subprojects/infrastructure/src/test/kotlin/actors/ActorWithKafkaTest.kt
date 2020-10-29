@@ -13,17 +13,9 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-open class Message(){}
-
-
-class MessageStop(): Message() {
-}
-
-class MessageStart(): Message() {
-}
-
-class MessageHeartbeat(): Message() {
-}
+open class Message()
+class MessageStop(): Message()
+class MessageStart(): Message()
 
 
 
