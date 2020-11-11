@@ -44,7 +44,8 @@ class ConsumerSimpleTests {
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
-            put(ConsumerConfig.GROUP_ID_CONFIG, Faker.anyWord())
+            put(ConsumerConfig.GROUP_ID_CONFIG, "aaa")
+//          put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true") // by default every 5 secs
 //          put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest") // by default
         }
 
