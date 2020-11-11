@@ -18,7 +18,7 @@ class ConsumerSimpleTests {
 
 
     // FIXTURES
-    fun fixtures(topic: String){
+    fun fixtures(){
         val properties = Properties().apply{
             put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
@@ -44,17 +44,19 @@ class ConsumerSimpleTests {
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
             put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
-            put(ConsumerConfig.GROUP_ID_CONFIG, "fgg")
-            put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5")
+            put(ConsumerConfig.GROUP_ID_CONFIG, Faker.anyWord())
+//          put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest") // by default
         }
 
-        return KafkaConsumer<String, String>(properties)
+        val consumer = KafkaConsumer<String, String>(properties)
+        consumer.subscribe(listOf(topicInput))
+        return consumer
     }
 
-    fun consume(consumer: KafkaConsumer<String, String>, max: Int = 5){
+    fun consume(consumer: KafkaConsumer<String, String>){
         val results = mutableListOf<ConsumerRecord<String, String>>()
 
-        while(results.size < max){
+        while(true){
             val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
             records.forEach{ record ->
                 val topic: String  = record.topic()
@@ -69,11 +71,8 @@ class ConsumerSimpleTests {
 
     @Test
     fun run(){
-        val consumer = buildConsumer()
-
-        this.fixtures(topicInput)
-        consumer.subscribe(listOf(topicInput))
-        this.consume(consumer, max = 5)
+        this.fixtures()
+        this.consume(buildConsumer())
 
     }
 }
