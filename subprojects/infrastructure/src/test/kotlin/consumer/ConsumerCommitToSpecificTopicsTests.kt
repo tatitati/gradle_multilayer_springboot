@@ -11,8 +11,7 @@ class ConsumerCommitToSpecificTopicsTests {
     private fun printOffsets(message: String, consumer: KafkaConsumer<String, String>, topicPartition: TopicPartition) {
         val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartition)))
         val offsetAndMetadata: OffsetAndMetadata? = committed[topicPartition]
-        val position = consumer.position(topicPartition)
-        System.out.printf("Offset info %s, Committed: %s, current position %s%n", message, if (offsetAndMetadata == null) null else offsetAndMetadata.offset(), position)
+        println("\t\t${message}, offset: ${if (offsetAndMetadata == null) null else offsetAndMetadata.offset()}")
     }
 
     fun buildConsumer(): KafkaConsumer<String, String> {
@@ -50,10 +49,9 @@ class ConsumerCommitToSpecificTopicsTests {
             records.forEach{ record ->
                 val recordTopic: String  = record.topic()
                 val recordPartition: Int = record.partition()
-                val recordValue: String = record.value()
                 val recordOffset: Long = record.offset()
 
-                println("\n\n$recordTopic [$recordPartition($recordOffset)] -- $recordValue")
+                println("\n\n$recordTopic [$recordPartition($recordOffset)] -- ${record.value()}")
 
                 if(recordTopic == "topic__AA"){
                     val topicPartitionA = TopicPartition(recordTopic, recordPartition)
@@ -66,15 +64,15 @@ class ConsumerCommitToSpecificTopicsTests {
                         nextCommitOffsetInpartition = lastCommitedOffsetInPartition!!.offset() + 1
                     }
 
-                    // printOffsets("\tTopic AA: CURRENT", consumer, topicPartitionA);
+                    printOffsets("\tBEFORE", consumer, topicPartitionA);
                     consumer.commitSync(mapOf(topicPartitionA to OffsetAndMetadata(nextCommitOffsetInpartition)))
-                    // printOffsets("\tTopic AA: AFTER", consumer, topicPartitionA);
+                    printOffsets("\tAFTER", consumer, topicPartitionA);
                 }
 
 
                 if(recordTopic == "topic__ER"){
                     val topicPartitionError = TopicPartition(recordTopic, recordPartition)
-                    // printOffsets("\tTopic ER: CURRENT", consumer, topicPartitionError);
+                    printOffsets("\tCURRENT", consumer, topicPartitionError);
                 }
             }
         }
