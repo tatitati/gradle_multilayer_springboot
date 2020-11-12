@@ -17,7 +17,6 @@ class ConsumerCommitToSpecificTopicsTests {
         System.out.printf("Offset info %s, Committed: %s, current position %s%n", message, if (offsetAndMetadata == null) null else offsetAndMetadata.offset(), position)
     }
 
-
     fun buildConsumer(): KafkaConsumer<String, String> {
         val properties = Properties().apply{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
