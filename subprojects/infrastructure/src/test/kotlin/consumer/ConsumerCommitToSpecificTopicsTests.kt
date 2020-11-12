@@ -26,47 +26,55 @@ class ConsumerCommitToSpecificTopicsTests {
         }
 
         val consumer = KafkaConsumer<String, String>(properties)
-        consumer.subscribe(listOf("topic_AA", "topic_ERR"))
+        consumer.subscribe(listOf("topic__AA", "topic__ER"))
         return consumer
     }
 
     fun consume(consumer: KafkaConsumer<String, String>){
-        val topicPartitionError = TopicPartition("topic_ERR", 0)
-        val topicPartitionA = TopicPartition("topic_AA", 0)
+        var partitions: MutableSet<TopicPartition> = consumer.assignment()
 
         while(true){
             val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
+            if(partitions.isEmpty()){
+                partitions = consumer.assignment()
+            }
+
+            partitions.forEach{p ->
+                // println("PARTITIONS: ${p.topic()} / ${p.partition()}")
+                // PARTITIONS: topic__AA / 1
+                // PARTITIONS: topic__ER / 0
+                // PARTITIONS: topic__ER / 1
+                // PARTITIONS: topic__AA / 0
+            }
+
             records.forEach{ record ->
-                val topic: String  = record.topic()
-                val msg: String = record.value()
-                val offset: Long = record.offset()
+                val recordTopic: String  = record.topic()
+                val recordPartition: Int = record.partition()
+                val recordValue: String = record.value()
+                val recordOffset: Long = record.offset()
 
-                println("\n\n$topic [$offset] -- $msg")
+                println("\n\n$recordTopic [$recordPartition($recordOffset)] -- $recordValue")
 
-                val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartitionA)))
+                if(recordTopic == "topic__AA"){
+                    val topicPartitionA = TopicPartition(recordTopic, recordPartition)
 
-                if(record.topic() == "topic_AA"){
-                    println("\tcommiting")
-                    var nextOffset = 1L
-                    val offsetAndMetadataA: OffsetAndMetadata? = committed[topicPartitionA]
-                    if(offsetAndMetadataA != null){
-                        nextOffset = offsetAndMetadataA!!.offset() + 1
+                    // CALCULATE NEXT OFFSET TO COMMIT
+                    val allOffsetCommitedToPartitions: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(hashSetOf(topicPartitionA))
+                    val lastCommitedOffsetInPartition: OffsetAndMetadata? = allOffsetCommitedToPartitions[topicPartitionA]
+                    var nextCommitOffsetInpartition = 1L
+                    if(lastCommitedOffsetInPartition != null){
+                        nextCommitOffsetInpartition = lastCommitedOffsetInPartition!!.offset() + 1
                     }
-                    val newoffsetAndMetadataA = OffsetAndMetadata(nextOffset)
-                    printOffsets("\tTopic AA: before commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic ERR: before commitAsync() call", consumer, topicPartitionError);
-                    consumer.commitSync(mapOf(topicPartitionA to newoffsetAndMetadataA))
-                    printOffsets("\tTopic AA: after commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic ERR: after commitAsync() call", consumer, topicPartitionError);
+
+                    // printOffsets("\tTopic AA: CURRENT", consumer, topicPartitionA);
+                    consumer.commitSync(mapOf(topicPartitionA to OffsetAndMetadata(nextCommitOffsetInpartition)))
+                    // printOffsets("\tTopic AA: AFTER", consumer, topicPartitionA);
                 }
 
 
-                if(record.topic() == "topic_ERR"){
-                    println("\tNot commiting")
-                    printOffsets("\tTopic AA: before commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic ERR: before commitAsync() call", consumer, topicPartitionError);
-                    printOffsets("\tTopic AA: after commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic ERR: after commitAsync() call", consumer, topicPartitionError);
+                if(recordTopic == "topic__ER"){
+                    val topicPartitionError = TopicPartition(recordTopic, recordPartition)
+                    // printOffsets("\tTopic ER: CURRENT", consumer, topicPartitionError);
                 }
             }
         }
