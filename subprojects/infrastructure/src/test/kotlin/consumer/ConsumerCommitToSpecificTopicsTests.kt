@@ -8,8 +8,6 @@ import java.util.*
 
 
 class ConsumerCommitToSpecificTopicsTests {
-    val topics = listOf("topic_AA", "topic_ERR")
-
     private fun printOffsets(message: String, consumer: KafkaConsumer<String, String>, topicPartition: TopicPartition) {
         val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartition)))
         val offsetAndMetadata: OffsetAndMetadata? = committed[topicPartition]
@@ -28,15 +26,13 @@ class ConsumerCommitToSpecificTopicsTests {
         }
 
         val consumer = KafkaConsumer<String, String>(properties)
-        consumer.subscribe(topics)
+        consumer.subscribe(listOf("topic_AA", "topic_ERR"))
         return consumer
     }
 
     fun consume(consumer: KafkaConsumer<String, String>){
         val topicPartitionError = TopicPartition("topic_ERR", 0)
         val topicPartitionA = TopicPartition("topic_AA", 0)
-
-        val results = mutableListOf<ConsumerRecord<String, String>>()
 
         while(true){
             val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
@@ -46,8 +42,6 @@ class ConsumerCommitToSpecificTopicsTests {
                 val offset: Long = record.offset()
 
                 println("\n\n$topic [$offset] -- $msg")
-                results.add(record)
-
 
                 val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartitionA)))
 
