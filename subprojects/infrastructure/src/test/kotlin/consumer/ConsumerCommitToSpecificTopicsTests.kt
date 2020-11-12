@@ -8,7 +8,7 @@ import java.util.*
 
 
 class ConsumerCommitToSpecificTopicsTests {
-    val topics = listOf("topic_AA", "topic_BB", "topic_ERR")
+    val topics = listOf("topic_AA", "topic_ERR")
 
     private fun printOffsets(message: String, consumer: KafkaConsumer<String, String>, topicPartition: TopicPartition) {
         val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartition)))
@@ -35,7 +35,6 @@ class ConsumerCommitToSpecificTopicsTests {
     fun consume(consumer: KafkaConsumer<String, String>){
         val topicPartitionError = TopicPartition("topic_ERR", 0)
         val topicPartitionA = TopicPartition("topic_AA", 0)
-        val topicPartitionB = TopicPartition("topic_BB", 0)
 
         val results = mutableListOf<ConsumerRecord<String, String>>()
 
@@ -50,7 +49,7 @@ class ConsumerCommitToSpecificTopicsTests {
                 results.add(record)
 
 
-                val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartitionA, topicPartitionB)))
+                val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartitionA)))
 
                 if(record.topic() == "topic_AA"){
                     println("\tcommiting")
@@ -61,38 +60,18 @@ class ConsumerCommitToSpecificTopicsTests {
                     }
                     val newoffsetAndMetadataA = OffsetAndMetadata(nextOffset)
                     printOffsets("\tTopic AA: before commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: before commitAsync() call", consumer, topicPartitionB);
                     printOffsets("\tTopic ERR: before commitAsync() call", consumer, topicPartitionError);
                     consumer.commitSync(mapOf(topicPartitionA to newoffsetAndMetadataA))
                     printOffsets("\tTopic AA: after commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: after commitAsync() call", consumer, topicPartitionB);
                     printOffsets("\tTopic ERR: after commitAsync() call", consumer, topicPartitionError);
                 }
 
-                if(record.topic() == "topic_BB"){
-                    println("\tcommiting")
-                    val offsetAndMetadataB: OffsetAndMetadata? = committed[topicPartitionB]
-                    var nextOffset = 1L
-                    if(offsetAndMetadataB != null){
-                        nextOffset = offsetAndMetadataB!!.offset() + 1
-                    }
-                    val newoffsetAndMetadataB = OffsetAndMetadata(nextOffset)
-                    printOffsets("\tTopic AA: before commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: before commitAsync() call", consumer, topicPartitionB);
-                    printOffsets("\tTopic ERR: before commitAsync() call", consumer, topicPartitionError);
-                    consumer.commitSync(mapOf(topicPartitionB to newoffsetAndMetadataB))
-                    printOffsets("\tTopic AA: after commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: after commitAsync() call", consumer, topicPartitionB);
-                    printOffsets("\tTopic ERR: after commitAsync() call", consumer, topicPartitionError);
-                }
 
                 if(record.topic() == "topic_ERR"){
                     println("\tNot commiting")
                     printOffsets("\tTopic AA: before commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: before commitAsync() call", consumer, topicPartitionB);
                     printOffsets("\tTopic ERR: before commitAsync() call", consumer, topicPartitionError);
                     printOffsets("\tTopic AA: after commitAsync() call", consumer, topicPartitionA);
-                    printOffsets("\tTopic BB: after commitAsync() call", consumer, topicPartitionB);
                     printOffsets("\tTopic ERR: after commitAsync() call", consumer, topicPartitionError);
                 }
             }
