@@ -74,6 +74,5 @@ class ConsumerSimpleTests {
     fun run(){
         this.fixtures()
         this.consume(buildConsumer())
-
     }
 }
