@@ -58,46 +58,46 @@ class Faker {
             return anyString(withMinLength = 4, withMaxLength = 30, withCharactersPool = charactersPool, allowEmpty = allowEmpty)
         }
 
-        fun sentEventsToTopic(topic: String, items: List<String>, partitionsTopic: Int = 2){
-            fun givenItemsInTheTopic(topicName: String, items: List<String>, partitionsTopic: Int = 2){
-                // check for existence of topic
-                val props = Properties();
-                props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
-                val adminClient: AdminClient = AdminClient.create(props)
-                val options = ListTopicsOptions()
-                options.listInternal(true);
-                val topics: ListTopicsResult = adminClient.listTopics(options)
-                val currentTopicList: Set<String> = topics.names().get()
+        fun givenItemsInTheTopic(topicName: String, items: List<String>, partitionsTopic: Int = 2){
+            // check for existence of topic
+            val props = Properties();
+            props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
-                // create topic if it doesnt exist
-                if(!currentTopicList.contains(topicName)) {
-                    val newTopic = NewTopic(topicName, 2, 1.toShort())
-                    val newTopics: MutableList<NewTopic> = ArrayList<NewTopic>()
-                    newTopics.add(newTopic)
+            val adminClient: AdminClient = AdminClient.create(props)
+            val options = ListTopicsOptions()
+            options.listInternal(true);
+            val topics: ListTopicsResult = adminClient.listTopics(options)
+            val currentTopicList: Set<String> = topics.names().get()
+            println(currentTopicList)
 
-                    adminClient.createTopics(newTopics)
-                    adminClient.close()
-                }
-
-                // ingest into topic
-                val properties = Properties().apply{
-                    put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-                    put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-                    put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-                }
-
-                val producer = KafkaProducer<String, String>(properties)
-
-                for (item in items) {
-                    producer
-                            .send(ProducerRecord(topicName, item))
-                            .get()
-                }
-
-                producer.flush()
-                producer.close()
+            // create topic if it doesnt exist
+            if(!currentTopicList.contains(topicName)) {
+                val newTopic = NewTopic(topicName, 2, 1.toShort())
+                val newTopics: MutableList<NewTopic> = ArrayList<NewTopic>()
+                newTopics.add(newTopic)
+                adminClient.createTopics(newTopics)
             }
+
+            adminClient.close()
+
+            // ingest into topic
+            val properties = Properties().apply{
+                put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+                put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+            }
+
+            val producer = KafkaProducer<String, String>(properties)
+
+            for (item in items) {
+                producer
+                        .send(ProducerRecord(topicName, item))
+                        .get()
+            }
+
+            producer.flush()
+            producer.close()
         }
     }
 }

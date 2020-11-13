@@ -31,7 +31,7 @@ class BasicProducerTest {
 
     @Test
     fun fakerCanPopulateTopic(){
-        Faker.sentEventsToTopic(
+        Faker.givenItemsInTheTopic(
                 "topic-BasicProducerTest",
                 Faker.anyListFromBuilder({Faker.anyWord()}, 10)
         )

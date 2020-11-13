@@ -75,4 +75,9 @@ class ConsumerSimpleTests {
         this.fixtures()
         this.consume(buildConsumer())
     }
+
+    @Test
+    fun `can ingest data using faker easily`(){
+        Faker.givenItemsInTheTopic("a_very_new_topic2", Faker.anyListFromBuilder({Faker.anyWord()}, 10))
+    }
 }
