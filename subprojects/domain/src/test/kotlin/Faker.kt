@@ -1,5 +1,9 @@
 package myapp.test.domain
 
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.StringSerializer
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -51,6 +55,29 @@ class Faker {
         fun anyWord(allowEmpty: Boolean = false): String {
             val charactersPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
             return anyString(withMinLength = 4, withMaxLength = 30, withCharactersPool = charactersPool, allowEmpty = allowEmpty)
+        }
+
+        fun sentEventsToTopic(topic: String, items: List<String>, partitionsTopic: Int = 2){
+            // check for existence of topic
+
+            // create topic if it doesnt exist
+
+            val properties = Properties().apply{
+                put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+                put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+            }
+
+            val producer = KafkaProducer<String, String>(properties)
+
+            for (item in items) {
+                producer
+                        .send(ProducerRecord(topic, item))
+                        .get()
+            }
+
+            producer.flush()
+            producer.close()
         }
     }
 }

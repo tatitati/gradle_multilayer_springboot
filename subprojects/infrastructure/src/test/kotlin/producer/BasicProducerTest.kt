@@ -1,5 +1,6 @@
 package myapp.test.infrastructure.producer
 
+import myapp.test.domain.Faker
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -26,5 +27,13 @@ class BasicProducerTest {
             flush()
             close()
         }
+    }
+
+    @Test
+    fun fakerCanPopulateTopic(){
+        Faker.sentEventsToTopic(
+                "topic-BasicProducerTest",
+                Faker.anyListFromBuilder({Faker.anyWord()}, 10)
+        )
     }
 }
