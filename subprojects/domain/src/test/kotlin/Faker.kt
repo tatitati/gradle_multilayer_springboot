@@ -1,5 +1,6 @@
 package myapp.test.domain
 
+import org.apache.kafka.clients.admin.*
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -58,26 +59,45 @@ class Faker {
         }
 
         fun sentEventsToTopic(topic: String, items: List<String>, partitionsTopic: Int = 2){
-            // check for existence of topic
+            fun givenItemsInTheTopic(topicName: String, items: List<String>, partitionsTopic: Int = 2){
+                // check for existence of topic
+                val props = Properties();
+                props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
-            // create topic if it doesnt exist
+                val adminClient: AdminClient = AdminClient.create(props)
+                val options = ListTopicsOptions()
+                options.listInternal(true);
+                val topics: ListTopicsResult = adminClient.listTopics(options)
+                val currentTopicList: Set<String> = topics.names().get()
 
-            val properties = Properties().apply{
-                put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-                put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-                put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                // create topic if it doesnt exist
+                if(!currentTopicList.contains(topicName)) {
+                    val newTopic = NewTopic(topicName, 2, 1.toShort())
+                    val newTopics: MutableList<NewTopic> = ArrayList<NewTopic>()
+                    newTopics.add(newTopic)
+
+                    adminClient.createTopics(newTopics)
+                    adminClient.close()
+                }
+
+                // ingest into topic
+                val properties = Properties().apply{
+                    put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+                    put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                    put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+                }
+
+                val producer = KafkaProducer<String, String>(properties)
+
+                for (item in items) {
+                    producer
+                            .send(ProducerRecord(topicName, item))
+                            .get()
+                }
+
+                producer.flush()
+                producer.close()
             }
-
-            val producer = KafkaProducer<String, String>(properties)
-
-            for (item in items) {
-                producer
-                        .send(ProducerRecord(topic, item))
-                        .get()
-            }
-
-            producer.flush()
-            producer.close()
         }
     }
 }
