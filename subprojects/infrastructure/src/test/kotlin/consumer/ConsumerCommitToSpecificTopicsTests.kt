@@ -14,6 +14,9 @@ class ConsumerCommitToSpecificTopicsTests {
         println("\t\t${message}, offset: ${if (commitedOffsetAndMetadata == null) "no-metadata" else commitedOffsetAndMetadata.offset()}")
     }
 
+    val topicA = "topic_A1"
+    val topicE = "topic_E1"
+
     fun buildConsumer(): KafkaConsumer<String, String> {
         val properties = Properties().apply{
             put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
@@ -25,7 +28,7 @@ class ConsumerCommitToSpecificTopicsTests {
         }
 
         val consumer = KafkaConsumer<String, String>(properties)
-        consumer.subscribe(listOf("topic__AAA", "topic__ERR"))
+        consumer.subscribe(listOf(topicA, topicE))
         return consumer
     }
 
@@ -53,19 +56,11 @@ class ConsumerCommitToSpecificTopicsTests {
 
                 println("\n\n$recordTopic [$recordPartition($recordOffset)] -- ${record.value()}")
 
-                if(recordTopic == "topic__AAA"){
+                if(recordTopic == topicA){
                     val topicPartition = TopicPartition(recordTopic, recordPartition)
 
-                    // CALCULATE NEXT OFFSET TO COMMIT
-                    // val allOffsetCommitedToPartitions: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(hashSetOf(topicPartitionA))
-                    // val lastCommitedOffsetInPartition: OffsetAndMetadata? = allOffsetCommitedToPartitions[topicPartitionA]
-                    // var nextCommitOffsetInpartition = 1L
-                    // if(lastCommitedOffsetInPartition != null){
-                    //     nextCommitOffsetInpartition = lastCommitedOffsetInPartition!!.offset() + 1
-                    // }
-
                     printOffsets("\tBEFORE", consumer, topicPartition);
-                    consumer.commitSync(mapOf(topicPartition to OffsetAndMetadata(recordOffset)))
+                    consumer.commitSync(mapOf(topicPartition to OffsetAndMetadata(recordOffset + 1)))
                     printOffsets("\tAFTER", consumer, topicPartition);
                 }
             }
