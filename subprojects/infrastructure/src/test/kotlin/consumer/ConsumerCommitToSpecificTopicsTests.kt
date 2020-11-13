@@ -41,14 +41,6 @@ class ConsumerCommitToSpecificTopicsTests {
                 partitions = consumer.assignment()
             }
 
-            partitions.forEach{p ->
-                // println("PARTITIONS: ${p.topic()} / ${p.partition()}")
-                // PARTITIONS: topic__AA / 1
-                // PARTITIONS: topic__ER / 0
-                // PARTITIONS: topic__ER / 1
-                // PARTITIONS: topic__AA / 0
-            }
-
             records.forEach{ record ->
                 val recordTopic: String  = record.topic()
                 val recordPartition: Int = record.partition()
