@@ -27,6 +27,7 @@ class ConsumerPauseResumeTests {
     }
 
     fun consume(consumer: KafkaConsumer<String, String>){
+
         while(true){
             val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
             records.forEach{ record ->
@@ -39,13 +40,11 @@ class ConsumerPauseResumeTests {
                 if(record.value() == "pause"){
                     val assignments = consumer.assignment()
                     consumer.pause(assignments)
+                    println("PAUSED")
+                    Thread.sleep(15000)
+                    consumer.resume(assignments)
+                    println("RESUMED")
                 }
-
-                // BE AWARE: this code is useless, once is stopped, none record will be consummed to check if is resume or not, is paused!
-                // if(record.value() == "resume"){
-                //     val assignments = consumer.assignment()
-                //     consumer.resume(assignments)
-                // }
             }
         }
     }
