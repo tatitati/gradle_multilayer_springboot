@@ -9,9 +9,9 @@ import java.util.*
 
 class ConsumerCommitToSpecificTopicsTests {
     private fun printOffsets(message: String, consumer: KafkaConsumer<String, String>, topicPartition: TopicPartition) {
-        val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(HashSet(Arrays.asList(topicPartition)))
-        val offsetAndMetadata: OffsetAndMetadata? = committed[topicPartition]
-        println("\t\t${message}, offset: ${if (offsetAndMetadata == null) null else offsetAndMetadata.offset()}")
+        val committed: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(hashSetOf(topicPartition))
+        val commitedOffsetAndMetadata: OffsetAndMetadata? = committed[topicPartition]
+        println("\t\t${message}, offset: ${if (commitedOffsetAndMetadata == null) "no-metadata" else commitedOffsetAndMetadata.offset()}")
     }
 
     fun buildConsumer(): KafkaConsumer<String, String> {
@@ -25,12 +25,12 @@ class ConsumerCommitToSpecificTopicsTests {
         }
 
         val consumer = KafkaConsumer<String, String>(properties)
-        consumer.subscribe(listOf("topic__AA", "topic__ER"))
+        consumer.subscribe(listOf("topic__AAA", "topic__ERR"))
         return consumer
     }
 
     fun consume(consumer: KafkaConsumer<String, String>){
-        var partitions: MutableSet<TopicPartition> = consumer.assignment()
+        var partitions: MutableSet<TopicPartition> = mutableSetOf()
 
         while(true){
             val records: ConsumerRecords<String, String> = consumer.poll(Duration.ofSeconds(1))
@@ -53,26 +53,20 @@ class ConsumerCommitToSpecificTopicsTests {
 
                 println("\n\n$recordTopic [$recordPartition($recordOffset)] -- ${record.value()}")
 
-                if(recordTopic == "topic__AA"){
-                    val topicPartitionA = TopicPartition(recordTopic, recordPartition)
+                if(recordTopic == "topic__AAA"){
+                    val topicPartition = TopicPartition(recordTopic, recordPartition)
 
                     // CALCULATE NEXT OFFSET TO COMMIT
-                    val allOffsetCommitedToPartitions: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(hashSetOf(topicPartitionA))
-                    val lastCommitedOffsetInPartition: OffsetAndMetadata? = allOffsetCommitedToPartitions[topicPartitionA]
-                    var nextCommitOffsetInpartition = 1L
-                    if(lastCommitedOffsetInPartition != null){
-                        nextCommitOffsetInpartition = lastCommitedOffsetInPartition!!.offset() + 1
-                    }
+                    // val allOffsetCommitedToPartitions: Map<TopicPartition, OffsetAndMetadata> = consumer.committed(hashSetOf(topicPartitionA))
+                    // val lastCommitedOffsetInPartition: OffsetAndMetadata? = allOffsetCommitedToPartitions[topicPartitionA]
+                    // var nextCommitOffsetInpartition = 1L
+                    // if(lastCommitedOffsetInPartition != null){
+                    //     nextCommitOffsetInpartition = lastCommitedOffsetInPartition!!.offset() + 1
+                    // }
 
-                    printOffsets("\tBEFORE", consumer, topicPartitionA);
-                    consumer.commitSync(mapOf(topicPartitionA to OffsetAndMetadata(nextCommitOffsetInpartition)))
-                    printOffsets("\tAFTER", consumer, topicPartitionA);
-                }
-
-
-                if(recordTopic == "topic__ER"){
-                    val topicPartitionError = TopicPartition(recordTopic, recordPartition)
-                    printOffsets("\tCURRENT", consumer, topicPartitionError);
+                    printOffsets("\tBEFORE", consumer, topicPartition);
+                    consumer.commitSync(mapOf(topicPartition to OffsetAndMetadata(recordOffset)))
+                    printOffsets("\tAFTER", consumer, topicPartition);
                 }
             }
         }
