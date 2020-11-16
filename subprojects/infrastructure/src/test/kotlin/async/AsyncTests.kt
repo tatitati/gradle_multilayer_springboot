@@ -30,6 +30,36 @@ class AsyncTests {
     }
 
     @Test
+    fun `I can use the same than before, using a suspend function, same logic`(){
+        runBlocking {
+            val job = GlobalScope.launch {
+                repeat(30) { i ->
+                    processBatch(i)
+                }
+            }
+            delay(1000L)
+            println("main: The user requests the cancellation of the processing")
+            job.cancelAndJoin() // cancel the job, it doesnt wait to complete the coroutine
+            println("main: The batch processing is cancelled")
+        }
+        println("done")
+
+        // Processing 0 ...
+        // Processing 1 ...
+        // Processing 2 ...
+        // Processing 3 ...
+        // main: The user requests the cancellation of the processing
+        // main: The batch processing is cancelled
+        // done
+    }
+
+    private suspend fun processBatch(i: Int) {
+        println("Processing $i ...")
+        delay(300L)
+    }
+
+
+    @Test
     fun `joining a coroutine execution`(){
         runBlocking {
             val job = GlobalScope.launch {
