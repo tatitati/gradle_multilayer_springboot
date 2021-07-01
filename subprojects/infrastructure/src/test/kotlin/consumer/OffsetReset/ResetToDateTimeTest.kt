@@ -27,7 +27,7 @@ fun consume(consumer: KafkaConsumer<String, String>){
 
         // reset to offset
         for ((topicPartition, offsetTimestamp) in offsets){
-            consumer.seek(topicPartition, offsetTimestamp.timestamp())
+            consumer.seek(topicPartition, offsetTimestamp.offset())
         }
 
 
